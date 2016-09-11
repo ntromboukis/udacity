@@ -49,7 +49,15 @@ class User(db.Model):
 
 class MainHandler(Handler):
   def get(self):
-    self.render("index.html")
+    username = self.request.cookies.get('username')
+    if username:
+      hashed_password = self.request.cookies.get('hash_pass')
+      if valid_pw(username, hashed_password):
+        self.render("index.html",
+          username = username)
+    else:
+      self.render("index.html")
+
 
 
 class BlogHandler(Handler):
@@ -102,7 +110,6 @@ class SignupHandler(Handler):
     confirm_password = self.request.get('verify')
 
     response = ValidSignup(username, email, password, confirm_password)
-    response_list = response.get_list()
     if response.is_valid():
       hashed_password = make_pw_hash(username, password)
       print 'hashed_password = %s' % hashed_password
@@ -116,11 +123,11 @@ class SignupHandler(Handler):
       self.redirect('/welcome')
     else:
       self.render("signup.html",
-                username_error = response_list[0][0],
-                username = response_list[0][1],
-                email_error  = response_list[1][0],
-                email = response_list[1][1],
-                password_error = response_list[2][0])
+                username_error = response.get_username_error(),
+                username = response.get_username(),
+                email_error  = response.get_email_error(),
+                email = response.get_email(),
+                password_error = response.get_password_error())
 
 
 class WelcomeHandler(Handler):
