@@ -73,18 +73,17 @@ def make_pw_hash(name, pw, salt=""):
   if salt == "":
       salt = make_salt()
   h = hashlib.sha256(name + pw + salt).hexdigest()
-  return '%s,%s' % (h, salt)
+  print 'result from make_pw_hash: %s|%s\n\n' % (h, salt)
+  return '%s|%s' % (h, salt)
 
 def valid_pw(name, pw):
   h = pw
-  print 'pw: %s' % pw
-  info = pw.split(',')
-  print 'info = %s \n\n\n' % info
+  info = pw.split('|')
   v = make_pw_hash(name, pw, info[1])
   if v == h:
-      return True
+    return True
   else:
-      return False
+    return False
 
 
 
