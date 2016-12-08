@@ -1,23 +1,41 @@
-{% extends "base.html" %}
+{% block modal %}
+<div id="myModal" class="modal">
+	<div class="modal-content">
+		<span class="close">x</span>
+		<h1>Signup Page</h1>
+		<form method="post">
+			<input type="text" name="username" placeholder="Username" value={{ username }}>
+			<div>{{username_error}}</div>
+			<br>
+			<input type="password" name="password" placeholder="Password">
+			<div style="color:red">{{password_error}}</div>
+			<br>
+			<input type="password" name="verify" placeholder="Confirm Password">
+			<br>
+			<br>
+			<input type="email" name="email" placeholder="Email(optional)" value={{ email }}>
+			<div>{{email_error}}</div>
+			<br>
+			<br>
+			<input type="submit">
+		</form>
+	</div>
+</div>
 
-{% block content %}
-
-<h1>Signup Page</h1>
-
-<form method="post">
-	<input type="text" name="username" placeholder="Username" value={{ username }}>
-	<div>{{username_error}}</div>
-	<br>
-	<input type="password" name="password" placeholder="Password">
-	<div style="color:red">{{password_error}}</div>
-	<br>
-	<input type="password" name="verify" placeholder="Confirm Password">
-	<br>
-	<br>
-	<input type="email" name="email" placeholder="Email(optional)" value={{ email }}>
-	<div>{{email_error}}</div>
-	<br>
-	<br>
-	<input type="submit">
-</form>
+<script type="text/javascript">
+var modal = document.getElementById('myModal');
+var btn = document.getElementById("loginBtn");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+span.onclick = function() {
+    modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
 {% endblock %}

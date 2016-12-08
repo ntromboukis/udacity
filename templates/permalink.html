@@ -4,7 +4,7 @@
 
 <div class="blog-title">{{post.subject}}</div>
 <pre class="blog-post">{{post.content}}</pre>
-<a href="/blog">Blog</a>
-<a href="/">Home</a>
-<a href="/newpost">New Post</a>
+
+<!-- If the user is signed in they may like the post if it is not theirs.
+Otherwise they will see the number of likes each post has -->
 {% endblock %}

@@ -4,9 +4,16 @@
 
 <h3>Blog Posts</h3>
 
-{% for blog in blogs %}
-<div class="blog-title">{{blog.subject}}</div>
-<pre class="blog-post">{{blog.content}}</pre>
+{% for post in blogs %}
+<div class="blog-title">{{post.subject}}</div>
+<pre class="blog-post">{{post.content}}</pre>
+<form method="post">
+		<label>
+			<span>Likes:{{post.likes}}</span>
+			<input type="checkbox" name="like">
+			<input type="submit">
+		</label>
+</form>
 <hr>
 {% endfor %}
 
