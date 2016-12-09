@@ -4,22 +4,114 @@
         <span class="close">x</span>
         <h1>{{banner}}</h1>
         <form method="post">
-            <input type="text" name="username" placeholder="Username" value={{ username }}>
-            <div>{{username_error}}</div>
-            <br>
-            <input type="password" name="password" placeholder="Password">
-            <div style="color:red">{{password_error}}</div>
-            <br>
-            <br>
+            <div id="top-fields">
+                <input type="text" name="username" placeholder="Username" value={{ username }}>
+                <div>{{username_error}}</div>
+                <br>
+                <input type="password" name="password" placeholder="Password">
+                <div style="color:red">{{password_error}}</div>
+            </div>
+            <div id="signup" style="display:none">
+                <div class="field">
+                <input type="password" name="verify" placeholder="Confirm Password">
+                </div>
+                <div class="field">
+                <input type="email" name="email" placeholder="Email(optional)" value={{ email }}>
+                <div>{{email_error}}</div>
+                </div>
+            </div>
+            <div class="toggle-switch">
+                <span>Sign In</span>
+                <label class="switch">
+                    <input onclick="signupFunction()" type="checkbox">
+                    <div class="slider round"></div>
+                </label>
+                <span>Sign Up</span>
+            </div>
             <input type="submit">
         </form>
     </div>
 </div>
 
+<style type="text/css">
+    #top-fields {
+        padding-bottom: 5em;
+    }
+
+    .field {
+        padding-bottom: 1em;
+    }
+
+    .toggle-switch {
+        padding: 1em;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {
+        display:none;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+</style>
+
 <script type="text/javascript">
 var modal = document.getElementById('myModal');
 var btn = document.getElementById("loginBtn");
 var span = document.getElementsByClassName("close")[0];
+var signup = document.getElementById("signup")
+var topFields = document.getElementById("top-fields")
+var val = 0;
 btn.onclick = function() {
     modal.style.display = "block";
 }
@@ -31,5 +123,20 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+function signupFunction() {
+    if (val % 2 == 0) {
+        signup.style.display = "block";
+        topFields.style.paddingBottom = "1em";
+        val ++;
+    } else {
+        signup.style.display = "none";
+        topFields.style.paddingBottom = "5em";
+        val ++;
+    }
+}
 </script>
 {% endblock %}
+
+
+
+
