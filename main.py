@@ -51,41 +51,32 @@ class MainHandler(Handler):
     def get(self):
         username = self.request.cookies.get('username')
         status = self.request.cookies.get('logged_in')
-        print 'get status: %s' % status
         if username:
             if status == "yes":
-                self.render(
-                    "index.html",
-                    message="Welcome",
-                    username=username,
-                    login="Logout")
-                self.render(
-                    "logout.html",
-                    banner="logout",
-                    username=username,
-                    message=", are you sure you want to log out?")
-
+                self.render("index.html",
+                            message="Welcome",
+                            username=username,
+                            login="Logout")
+                self.render("logout.html",
+                            banner="logout",
+                            username=username,
+                            message=", are you sure you want to log out?")
             elif status == "no":
-                self.render(
-                    "index.html",
-                    message="Welcome",
-                    username="",
-                    login="Sign In")
-                self.render(
-                    "signin.html",
-                    banner="signin")
+                self.render("index.html",
+                            message="Welcome",
+                            username="",
+                            login="Sign In")
+                self.render("signin.html",
+                            banner="signin")
         else:
             self.response.headers.add_header(
-                'Set-Cookie',
-                'new=yes')
-            self.render(
-                "index.html",
-                message="Welcome",
-                username="",
-                login="Signup")
-            self.render(
-                "signup.html",
-                banner="signup")
+                'Set-Cookie', 'new=yes')
+            self.render("index.html",
+                        message="Welcome",
+                        username="",
+                        login="Signup")
+            self.render("signup.html",
+                        banner="signup")
 
     def post(self):
         first_time = self.request.cookies.get('new')
