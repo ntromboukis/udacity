@@ -191,11 +191,20 @@ class PostPage(Handler):
 class NewPostHandler(Handler):
     def get(self):
         username = self.request.cookies.get("username")
-        if username:
-            self.render("newpost.html")
+        cookie_pass = self.request.cookies.get("hashed_password")
+        logged_in = self.request.cookies.get("logged_in")
+        app_engine_user = db.GqlQuery(
+            "SELECT * FROM User WHERE username IN ('%s')" % username).get()
+        db_pass = app_engine_user.hashed_password
+        if cookie_pass == db_pass and logged_in == "yes":
+            #  checks if cookie pass equals db pass meaning the
+            #  username is already in cookies
+            self.requestnder("newpost.html")
         else:
-            self.render("newpost.html",
-                        error="You must be signed in to create a post")
+            #  reroutes if user is not signed in
+            self.render("index.html",
+                        error="You must be signed in to create a post",
+                        login="Sign In")
 
     def post(self):
         username = self.request.cookies.get("username")
