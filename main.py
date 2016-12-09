@@ -85,7 +85,6 @@ class MainHandler(Handler):
             email = self.request.get('email')
             password = self.request.get('password')
             confirm_password = self.request.get('verify')
-
             response = ValidSignup(username, email, password, confirm_password)
             if response.is_valid():
                 hashed_password = make_pw_hash(username, password)
@@ -122,16 +121,13 @@ class MainHandler(Handler):
                     self.redirect("/")
 
                 elif status == "no":
-                        print 'in elif no'
                         password = self.request.get('password')
                         app_engine_user = db.GqlQuery(
                             "SELECT * FROM User WHERE username IN ('%s')" % username).get()
                         passpass = app_engine_user.hashed_password
                         salt = passpass.split("|")[1]
-                        print salt
                         hashed_password = make_pw_hash(username, password, salt)
                         if hashed_password == passpass:
-                            print 'in hash == pass'
                             self.response.headers.add_header(
                                 'Set-Cookie',
                                 'username=%s' % str(username))
@@ -145,7 +141,7 @@ class MainHandler(Handler):
                         else:
                             self.render(
                                 "signin.html",
-                                password_error="Not correct password")
+                                password_error="incorrect password")
                 else:
                     self.redirect("/")
             else:
