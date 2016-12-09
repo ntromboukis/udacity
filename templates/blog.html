@@ -6,6 +6,7 @@
 
 {% for post in blogs %}
 <div class="blog-title">{{post.subject}}</div>
+<div class="blog-author">{{post.author}}</div>
 <pre class="blog-post">{{post.content}}</pre>
 <form method="post">
 		<label>
