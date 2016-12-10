@@ -190,7 +190,33 @@ class PostPage(Handler):
         post = Posts.get_by_id(int(post_id))
         if not post:
             self.error(404)
-        return self.render("permalink.html", post=post)
+        user = self.isLoggedIn()
+        if user[0] and user[1][0] == post.author:
+            return self.render("permalink.html", post=post, status="Edit")
+        else:
+            return self.render("permalink.html", post=post)
+
+    def post(self, post_id):
+        p = Posts.get_by_id(int(post_id))
+        if self.isLoggedIn()[0]:
+            subject = self.request.get("subject")
+            content = self.request.get("content")
+            checked = self.request.get("rot13_checkbox")
+
+            if checked == "on":
+                content = convert_text(content)
+
+            if subject and content:
+                p.update(subject=subject, content=content)
+            else:
+                error = "we need both a subject and a blog entry"
+                self.render_front(subject, content, error)
+        else:
+            p.update(likes=likes)
+        p.put()
+        i = p.key().id()
+        self.redirect("/blog/%s" % (i))
+
 
 
 class NewPostHandler(Handler):

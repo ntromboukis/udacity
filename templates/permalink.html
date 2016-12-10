@@ -2,8 +2,55 @@
 
 {% block content %}
 
-<div class="blog-title">{{post.subject}}</div>
+<div id="status">{{status}}</div>
+
+<div id="likes">
+<h2 class="blog-title">{{post.subject}}</h2>
 <pre class="blog-post">{{post.content}}</pre>
+    <form method="post">
+            <label>
+                <span>Likes:{{post.likes}}</span>
+                <input type="checkbox" name="like">
+                <input type="submit">
+            </label>
+    </form>
+</div>
+
+<div id="edit">
+    <form method="post">
+        <label>
+            <div>Subject</div>
+            <input type="text" name="subject" value="{{ post.subject }}">
+        </label>
+        <label>
+            <div>Content</div>
+            <textarea name="content">{{ post.content }}</textarea>
+        </label>
+        <div class="error">{{ error }}</div>
+        <span>Convert to Rot13</span>
+        <input type="checkbox" name="rot13_checkbox">
+        <input type="submit">
+        </label>
+    </form>
+    <span>Likes:{{post.likes}}</span>
+</div>
+
+<script type="text/javascript">
+var status = document.getElementById('status').innerHTML;
+var likes = document.getElementById('likes');
+var edit = document.getElementById('edit');
+
+if (status == "Edit") {
+    likes.style.display = "none";
+    edit.style.display = "block";
+} else {
+    likes.style.display = "block";
+    edit.style.display = "none";
+};
+
+</script>
+
+
 
 <!-- If the user is signed in they may like the post if it is not theirs.
 Otherwise they will see the number of likes each post has -->
