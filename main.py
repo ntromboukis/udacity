@@ -22,12 +22,24 @@ class Handler(webapp2.RequestHandler):
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
 
+    def isLoggedIn(self):
+        username = self.request.cookies.get('username')
+        status = self.request.cookies.get('logged_in')
+        hash_pass = self.request.cookies.get('hash_pass')
+        app_engine_user = db.GqlQuery(
+            "SELECT * FROM User WHERE username IN ('%s')" % username).get()
+        passpass = app_engine_user.hashed_password
+        if app_engine_user is not None and status == "yes" and passpass == hash_pass:
+            return (True, [username, hash_pass])
+        else:
+            return (False, [username, hash_pass])
+
 
 class Posts(db.Model):
     subject = db.StringProperty(required=True)
     content = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
-    author = db.StringProperty()
+    author = db.StringProperty(required=True)
     likes = db.IntegerProperty()
 
 
@@ -49,16 +61,14 @@ class deletePosts(Handler):
 
 class MainHandler(Handler):
     def get(self):
-        username = self.request.cookies.get('username')
-        status = self.request.cookies.get('logged_in')
-        if username and status == "yes":
+        if self.isLoggedIn()[0]:
                 self.render("index.html",
                             message="Welcome",
-                            username=username,
+                            username=self.isLoggedIn()[1][0],
                             login="Logout")
                 self.render("logout.html",
                             banner="logout",
-                            username=username,
+                            username=self.isLoggedIn()[1][0],
                             message=", are you sure you want to log out?")
         else:
             self.render("index.html",
@@ -69,9 +79,6 @@ class MainHandler(Handler):
                         banner="signin")
 
     def post(self):
-        cookie_username = self.request.cookies.get('username')
-        status = self.request.cookies.get('logged_in')
-
         username = self.request.get('username')
         email = self.request.get('email')
         password = self.request.get('password')
@@ -79,7 +86,7 @@ class MainHandler(Handler):
         app_engine_user = db.GqlQuery(
             "SELECT * FROM User WHERE username IN ('%s')" % username).get()
 
-        if cookie_username and status == "yes":
+        if self.isLoggedIn()[0]:
             self.logout()
 
         elif app_engine_user is not None:
@@ -147,8 +154,18 @@ class MainHandler(Handler):
 class BlogHandler(Handler):
     def render_front(self, subject="", content="", error="", likes="", author="", blogs=""):
         blogs = db.GqlQuery("SELECT * FROM Posts order by created desc")
-        self.render("blog.html", subject=subject,
-                    content=content, error=error, likes="", author="", blogs=blogs)
+        if self.isLoggedIn()[0]:
+            self.render(
+                "blog.html", subject=subject,
+                content=content, error=error,
+                likes="", author="", blogs=blogs,
+                login="Logout")
+        else:
+            self.render(
+                "blog.html", subject=subject,
+                content=content, error=error,
+                likes="", author="", blogs=blogs,
+                login="Sign In")
 
     def get(self):
         self.render_front()
@@ -173,17 +190,9 @@ class PostPage(Handler):
 
 class NewPostHandler(Handler):
     def get(self):
-        username = self.request.cookies.get("username")
-        cookie_pass = self.request.cookies.get("hash_pass")
-        logged_in = self.request.cookies.get("logged_in")
-        app_engine_user = db.GqlQuery(
-            "SELECT * FROM User WHERE username IN ('%s')" % username).get()
-        db_pass = app_engine_user.hashed_password
-        if cookie_pass == db_pass and logged_in == "yes":
-            #  checks if cookie pass equals db pass meaning the
-            #  username is already in cookies
+        if self.isLoggedIn()[0]:
             self.render("newpost.html",
-                login="Logout")
+                        login="Logout")
         else:
             #  reroutes if user is not signed in
             self.render("index.html",
