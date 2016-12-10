@@ -28,12 +28,16 @@
 <div id="likes">
     <h2 class="blog-title">{{post.subject}}</h2>
     <pre class="blog-post">{{post.content}}</pre>
-    <span>Likes:{{post.likes}}</span>
     <div id="like_box">
+        <span>Likes:{{post.likes}}</span>
         <form method="post">
                 <label>
                     <input type="checkbox" name="like_checkbox">
-                    <input type="submit">
+                    {% if liked == "no" %}
+                        <input type="submit" value="Like">
+                    {% elif liked == "yes" %}
+                        <input type="submit" value="Unlike">
+                    {% endif %}
                 </label>
         </form>
     </div>

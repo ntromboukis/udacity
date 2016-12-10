@@ -213,7 +213,6 @@ class AccountHandler(Handler):
 
 class PostPage(Handler):
     def get(self, post_id):
-        # check if post_id in user.liked
         post = Posts.get_by_id(int(post_id))
         if not post:
             self.error(404)
@@ -221,9 +220,23 @@ class PostPage(Handler):
         if user[0] and user[1][0] == post.author:
             return self.render("permalink.html", post=post, status="Edit")
         elif user[0]:
-            return self.render("permalink.html", post=post, status="View")
+            # check if post_id in user.liked
+            app_engine_user = db.GqlQuery(
+                "SELECT * FROM User WHERE username IN ('%s')" % user[1][0]).get()
+            if post_id in app_engine_user.liked:
+                return self.render(
+                    "permalink.html",
+                    post=post,
+                    status="Like",
+                    liked="yes")
+            else:
+                return self.render(
+                    "permalink.html",
+                    post=post,
+                    status="Like",
+                    liked="no")
         else:
-            return self.render("permalink.html", post=post, status="Sign in to like")
+            return self.render("permalink.html", post=post)
 
     def post(self, post_id):
         p = Posts.get_by_id(int(post_id))
@@ -245,12 +258,22 @@ class PostPage(Handler):
         else:
             update_like = self.request.get("like_checkbox")
             if update_like == "on":
-                num = p.likes + 1
-                p.likes = num
-                # insert id to user.liked list
+                app_engine_user = db.GqlQuery(
+                    "SELECT * FROM User WHERE username in ('%s')" % user[1][0]).get()
+                if post_id in app_engine_user.liked:
+                    app_engine_user.liked.remove(post_id)
+                    app_engine_user.put()
+                    num = p.likes - 1
+                    p.likes = num
+                else:
+                    app_engine_user.liked.append(post_id)
+                    app_engine_user.put()
+                    num = p.likes + 1
+                    p.likes = num
         p.put()
         i = p.key().id()
         self.redirect("/blog/%s" % (i))
+
 
 
 class NewPostHandler(Handler):
