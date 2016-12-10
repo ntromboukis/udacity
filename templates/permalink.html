@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div id="status">{{status}}</div>
+<h1 id="status">{{status}}</h1>
 
 <div id="likes">
 <h2 class="blog-title">{{post.subject}}</h2>
@@ -10,7 +10,7 @@
     <form method="post">
             <label>
                 <span>Likes:{{post.likes}}</span>
-                <input type="checkbox" name="like">
+                <input type="checkbox" name="like_checkbox">
                 <input type="submit">
             </label>
     </form>
