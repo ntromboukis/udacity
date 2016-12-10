@@ -217,8 +217,10 @@ class PostPage(Handler):
         user = self.isLoggedIn()
         if user[0] and user[1][0] == post.author:
             return self.render("permalink.html", post=post, status="Edit")
+        elif user[0]:
+            return self.render("permalink.html", post=post, status="View")
         else:
-            return self.render("permalink.html", post=post)
+            return self.render("permalink.html", post=post, status="Sign in to like")
 
     def post(self, post_id):
         p = Posts.get_by_id(int(post_id))

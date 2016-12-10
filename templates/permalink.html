@@ -5,28 +5,30 @@
 <h1 id="status">{{status}}</h1>
 
 <div id="likes">
-<h2 class="blog-title">{{post.subject}}</h2>
-<pre class="blog-post">{{post.content}}</pre>
-    <form method="post">
-            <label>
-                <span>Likes:{{post.likes}}</span>
-                <input type="checkbox" name="like_checkbox">
-                <input type="submit">
-            </label>
-    </form>
+    <h2 class="blog-title">{{post.subject}}</h2>
+    <pre class="blog-post">{{post.content}}</pre>
+    <span>Likes:{{post.likes}}</span>
+    <div id="like_box">
+        <form method="post">
+                <label>
+                    <input type="checkbox" name="like_checkbox">
+                    <input type="submit">
+                </label>
+        </form>
+    </div>
 </div>
 
 <div id="edit">
     <form method="post">
         <label>
             <div>Subject</div>
-            <input type="text" name="subject" value="{{ post.subject }}">
+            <input type="text" name="subject" value="{{post.subject}}">
         </label>
         <label>
             <div>Content</div>
-            <textarea name="content">{{ post.content }}</textarea>
+            <textarea name="content">{{post.content}}</textarea>
         </label>
-        <div class="error">{{ error }}</div>
+        <div class="error">{{error}}</div>
         <span>Convert to Rot13</span>
         <input type="checkbox" name="rot13_checkbox">
         <input type="submit">
@@ -43,9 +45,13 @@ var edit = document.getElementById('edit');
 if (status == "Edit") {
     likes.style.display = "none";
     edit.style.display = "block";
+} else if (status == "View") {
+    likes.style.display = "block";
+    edit.style.display = "none";
 } else {
     likes.style.display = "block";
     edit.style.display = "none";
+    like_box.style.display = "none"
 };
 
 </script>
