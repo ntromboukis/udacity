@@ -186,6 +186,7 @@ class AccountHandler(Handler):
 
 class PostPage(Handler):
     def get(self, post_id):
+        print "post_id %s" % post_id
         post = Posts.get_by_id(int(post_id))
         if not post:
             self.error(404)
