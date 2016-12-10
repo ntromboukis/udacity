@@ -2,21 +2,7 @@
 
 {% block content %}
 
-<h1 id="status">{{status}}</h1>
-
-<div id="likes">
-    <h2 class="blog-title">{{post.subject}}</h2>
-    <pre class="blog-post">{{post.content}}</pre>
-    <span>Likes:{{post.likes}}</span>
-    <div id="like_box">
-        <form method="post">
-                <label>
-                    <input type="checkbox" name="like_checkbox">
-                    <input type="submit">
-                </label>
-        </form>
-    </div>
-</div>
+{% if status == "Edit" %}
 
 <div id="edit">
     <form method="post">
@@ -37,26 +23,29 @@
     <span>Likes:{{post.likes}}</span>
 </div>
 
-<script type="text/javascript">
-var status = document.getElementById('status').innerHTML;
-var likes = document.getElementById('likes');
-var edit = document.getElementById('edit');
+{% elif status == "Like" %}
 
-if (status == "Edit") {
-    likes.style.display = "none";
-    edit.style.display = "block";
-} else if (status == "View") {
-    likes.style.display = "block";
-    edit.style.display = "none";
-} else {
-    likes.style.display = "block";
-    edit.style.display = "none";
-    like_box.style.display = "none"
-};
+<div id="likes">
+    <h2 class="blog-title">{{post.subject}}</h2>
+    <pre class="blog-post">{{post.content}}</pre>
+    <span>Likes:{{post.likes}}</span>
+    <div id="like_box">
+        <form method="post">
+                <label>
+                    <input type="checkbox" name="like_checkbox">
+                    <input type="submit">
+                </label>
+        </form>
+    </div>
+</div>
 
-</script>
+{% else %}
 
+<h2 class="blog-title">{{post.subject}}</h2>
+<pre class="blog-post">{{post.content}}</pre>
+<span>Likes:{{post.likes}}</span>
 
+{% endif %}
 
 <!-- If the user is signed in they may like the post if it is not theirs.
 Otherwise they will see the number of likes each post has -->
