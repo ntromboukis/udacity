@@ -6,15 +6,8 @@
 
 {% for post in blogs %}
 <a href="blog/{{post.key().id()}}" class="blog-title">{{post.subject}}</a>
-<div class="blog-author">Author: {{post.author}}</div>
+<div id="blog-author">Author: {{post.author}}</div>
 <pre class="blog-post">{{post.content}}</pre>
-<form method="post">
-		<label>
-			<span>Likes:{{post.likes}}</span>
-			<input type="checkbox" name="like">
-			<input type="submit">
-		</label>
-</form>
 <hr>
 {% endfor %}
 
