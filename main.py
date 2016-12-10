@@ -3,8 +3,8 @@
 import os
 import webapp2
 import jinja2
-from google.appengine.ext import db
 from validate import *
+from models import User, Posts
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(
@@ -80,21 +80,6 @@ class Handler(webapp2.RequestHandler):
             return False
 
 
-class Posts(db.Model):
-    subject = db.StringProperty(required=True)
-    content = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
-    author = db.StringProperty(required=True)
-    likes = db.IntegerProperty(default=0)
-
-
-class User(db.Model):
-    username = db.StringProperty(required=True)
-    hashed_password = db.StringProperty(required=True)
-    email = db.EmailProperty()
-    liked = db.ListProperty(str, default=None)
-
-
 class deletePosts(Handler):
     def get(self):
         allPosts = db.GqlQuery("SELECT * from Posts")
@@ -135,7 +120,6 @@ class MainHandler(Handler):
             self.logout()
             self.redirect("/")
 
-
         elif app_engine_user is not None:
             passpass = app_engine_user.hashed_password
             salt = passpass.split("|")[1]
@@ -149,9 +133,9 @@ class MainHandler(Handler):
         else:
             if self.signup(username, password, confirm_password, email):
                 self.render("index.html",
-                        message="Welcome",
-                        username=username,
-                        login="Logout")
+                            message="Welcome",
+                            username=username,
+                            login="Logout")
             else:
                 self.render(
                     "signin.html",
@@ -160,7 +144,6 @@ class MainHandler(Handler):
                     email_error=response.get_email_error(),
                     email=response.get_email(),
                     password_error=response.get_password_error())
-
 
 
 class BlogHandler(Handler):
@@ -219,9 +202,6 @@ class BlogHandler(Handler):
                     password_error=response.get_password_error())
 
 
-
-
-
 class AccountHandler(Handler):
     def render_front(self, subject="", content="", error="", user=""):
         user = db.GqlQuery("SELECT * FROM User")
@@ -233,7 +213,7 @@ class AccountHandler(Handler):
 
 class PostPage(Handler):
     def get(self, post_id):
-        print "post_id %s" % post_id
+        # check if post_id in user.liked
         post = Posts.get_by_id(int(post_id))
         if not post:
             self.error(404)
@@ -267,10 +247,10 @@ class PostPage(Handler):
             if update_like == "on":
                 num = p.likes + 1
                 p.likes = num
+                # insert id to user.liked list
         p.put()
         i = p.key().id()
         self.redirect("/blog/%s" % (i))
-
 
 
 class NewPostHandler(Handler):
