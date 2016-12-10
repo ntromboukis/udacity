@@ -2,28 +2,7 @@
 
 {% block content %}
 
-{% if status == "Edit" %}
-
-<div id="edit">
-    <form method="post">
-        <label>
-            <div>Subject</div>
-            <input type="text" name="subject" value="{{post.subject}}">
-        </label>
-        <label>
-            <div>Content</div>
-            <textarea name="content">{{post.content}}</textarea>
-        </label>
-        <div class="error">{{error}}</div>
-        <span>Convert to Rot13</span>
-        <input type="checkbox" name="rot13_checkbox">
-        <input type="submit">
-        </label>
-    </form>
-    <span>Likes:{{post.likes}}</span>
-</div>
-
-{% elif status == "Like" %}
+{% if status == "Like" %}
 
 <div id="likes">
     <h2 class="blog-title">{{post.subject}}</h2>
@@ -51,6 +30,62 @@
 
 {% endif %}
 
-<!-- If the user is signed in they may like the post if it is not theirs.
-Otherwise they will see the number of likes each post has -->
+{% if can_edit == "yes" %}
+
+<a href="{{edit_link}}">Edit</a>
+
+{% endif %}
+
+<h2>Comments</h2>
+<ul style="list-style:None">
+{% for comment in comments %}
+<li>{{comment}}</li>
+<br>
+<hr>
+{% endfor %}
+</ul>
+{% if can_comment == "yes" %}
+
+<form method="post">
+     <label>
+            <div>Comment</div>
+            <textarea name="comment" placeholder="Insert comment here!"></textarea>
+            <input type="submit" value="Comment">
+        </label>
+</form>
+
+{% else %}
+<span>Sign In to comment!</span>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% endblock %}

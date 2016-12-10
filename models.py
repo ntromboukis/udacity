@@ -7,6 +7,7 @@ class Posts(db.Model):
     created = db.DateTimeProperty(auto_now_add=True)
     author = db.StringProperty(required=True)
     likes = db.IntegerProperty(default=0)
+    comments = db.ListProperty(str, default=None)
 
 
 class User(db.Model):

@@ -218,7 +218,13 @@ class PostPage(Handler):
             self.error(404)
         user = self.isLoggedIn()
         if user[0] and user[1][0] == post.author:
-            return self.render("permalink.html", post=post, status="Edit")
+            return self.render(
+                "permalink.html",
+                post=post,
+                comments=post.comments,
+                can_comment="yes",
+                can_edit="yes",
+                edit_link="/blog/edit/%s" % post.key().id())
         elif user[0]:
             # check if post_id in user.liked
             app_engine_user = db.GqlQuery(
@@ -228,19 +234,24 @@ class PostPage(Handler):
                     "permalink.html",
                     post=post,
                     status="Like",
-                    liked="yes")
+                    liked="yes",
+                    comments=post.comments,
+                    can_comment="yes")
             else:
                 return self.render(
                     "permalink.html",
                     post=post,
                     status="Like",
-                    liked="no")
+                    liked="no",
+                    comments=post.comments,
+                    can_comment="yes")
         else:
-            return self.render("permalink.html", post=post)
+            return self.render("permalink.html", post=post, can_comment="no", comments=post.comments)
 
     def post(self, post_id):
         p = Posts.get_by_id(int(post_id))
         user = self.isLoggedIn()
+        comment = self.request.get("comment")
         if user[0] and user[1][0] == p.author:
             subject = self.request.get("subject")
             content = self.request.get("content")
@@ -270,6 +281,8 @@ class PostPage(Handler):
                     app_engine_user.put()
                     num = p.likes + 1
                     p.likes = num
+        if comment:
+            p.comments.append(comment)
         p.put()
         i = p.key().id()
         self.redirect("/blog/%s" % (i))
@@ -306,12 +319,56 @@ class NewPostHandler(Handler):
             error = "we need both a subject and a blog entry"
             self.render_front(subject, content, error)
 
+class EditPostPage(Handler):
+    def get(self, post_id):
+        post = Posts.get_by_id(int(post_id))
+        if not post:
+            self.error(404)
+        user = self.isLoggedIn()
+        if user[0] and user[1][0] == post.author:
+            return self.render(
+                "editpermalink.html",
+                post=post,
+                can_edit="yes")
+        else:
+            return self.render(
+                "editpermalink.html",
+                can_edit="no")
+
+    def post(self, post_id):
+        p = Posts.get_by_id(int(post_id))
+        user = self.isLoggedIn()
+        comment = self.request.get("comment")
+        if user[0] and user[1][0] == p.author:
+            subject = self.request.get("subject")
+            content = self.request.get("content")
+            checked = self.request.get("rot13_checkbox")
+
+            if checked == "on":
+                content = convert_text(content)
+
+            if subject and content:
+                p.subject = subject
+                p.content = content
+            else:
+                error = "we need both a subject and a blog entry"
+                self.render_front(subject, content, error)
+
+            p.put()
+            i = p.key().id()
+            self.redirect("/blog/%s" % (i))
+
+        else:
+            error = "we need both a subject and a blog entry"
+            self.render_front(subject, content, error)
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/blog', BlogHandler),
     ('/newpost', NewPostHandler),
     ('/blog/([0-9]+)', PostPage),
+    ('/blog/edit/([0-9]+)', EditPostPage),
     ('/account', AccountHandler),
     ('/deleteall', deletePosts)
 
