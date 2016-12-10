@@ -28,8 +28,12 @@ class Handler(webapp2.RequestHandler):
         hash_pass = self.request.cookies.get('hash_pass')
         app_engine_user = db.GqlQuery(
             "SELECT * FROM User WHERE username IN ('%s')" % username).get()
-        passpass = app_engine_user.hashed_password
-        if app_engine_user is not None and status == "yes" and passpass == hash_pass:
+        if app_engine_user is not None:
+            passpass = app_engine_user.hashed_password
+        else:
+            return (False, [username, hash_pass])
+
+        if status == "yes" and passpass == hash_pass:
             return (True, [username, hash_pass])
         else:
             return (False, [username, hash_pass])
@@ -112,9 +116,6 @@ class MainHandler(Handler):
             u.put()
             self.response.headers.add_header(
                 'Set-Cookie',
-                'new=no')
-            self.response.headers.add_header(
-                'Set-Cookie',
                 'username=%s' % str(username))
             self.response.headers.add_header(
                 'Set-Cookie',
@@ -122,7 +123,10 @@ class MainHandler(Handler):
             self.response.headers.add_header(
                 'Set-Cookie',
                 'logged_in=%s' % 'yes')
-            self.redirect('/')
+            self.render("index.html",
+                        message="Welcome",
+                        username=username,
+                        login="Logout")
         else:
             self.render(
                 "signup.html",
