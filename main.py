@@ -38,20 +38,73 @@ class Handler(webapp2.RequestHandler):
         else:
             return (False, [username, hash_pass])
 
+    def logout(self):
+        self.response.headers.add_header(
+            'Set-Cookie', 'logged_in=%s' % 'no')
+        self.redirect("/")
+
+    def signup(self, username, password, confirm_password, email):
+        response = ValidSignup(
+            username, email, password, confirm_password)
+        if response.is_valid():
+            hashed_password = make_pw_hash(username, password)
+            u = User(username=username,
+                     hashed_password=hashed_password)
+            u.put()
+            self.response.headers.add_header(
+                'Set-Cookie',
+                'username=%s' % str(username))
+            self.response.headers.add_header(
+                'Set-Cookie',
+                'hash_pass=%s' % hashed_password)
+            self.response.headers.add_header(
+                'Set-Cookie',
+                'logged_in=%s' % 'yes')
+            self.render("index.html",
+                        message="Welcome",
+                        username=username,
+                        login="Logout")
+        else:
+            self.render(
+                "index.html",
+                username_error=response.get_username_error(),
+                username=response.get_username(),
+                email_error=response.get_email_error(),
+                email=response.get_email(),
+                password_error=response.get_password_error())
+
+    def signin(self, username, password, salt, passpass):
+        hashed_password = make_pw_hash(username, password, salt)
+        if hashed_password == passpass:
+            self.response.headers.add_header(
+                'Set-Cookie',
+                'username=%s' % str(username))
+            self.response.headers.add_header(
+                'Set-Cookie',
+                'hash_pass=%s' % str(hashed_password))
+            self.response.headers.add_header(
+                'Set-Cookie',
+                'logged_in=%s' % 'yes')
+            self.redirect("/")
+        else:
+            self.render(
+                "index.html",
+                password_error="incorrect password")
+
 
 class Posts(db.Model):
     subject = db.StringProperty(required=True)
     content = db.TextProperty(required=True)
     created = db.DateTimeProperty(auto_now_add=True)
     author = db.StringProperty(required=True)
-    likes = db.IntegerProperty()
+    likes = db.IntegerProperty(default=0)
 
 
 class User(db.Model):
     username = db.StringProperty(required=True)
     hashed_password = db.StringProperty(required=True)
     email = db.EmailProperty()
-    # liked = db.ListProperty() # Stores list of post.id that this user likes
+    liked = db.ListProperty(str, default=None)
 
 
 class deletePosts(Handler):
@@ -101,59 +154,6 @@ class MainHandler(Handler):
         else:
             self.signup(username, password, confirm_password, email)
 
-    def logout(self):
-        self.response.headers.add_header(
-            'Set-Cookie', 'logged_in=%s' % 'no')
-        self.redirect("/")
-
-    def signup(self, username, password, confirm_password, email):
-        response = ValidSignup(
-            username, email, password, confirm_password)
-        if response.is_valid():
-            hashed_password = make_pw_hash(username, password)
-            u = User(username=username,
-                     hashed_password=hashed_password)
-            u.put()
-            self.response.headers.add_header(
-                'Set-Cookie',
-                'username=%s' % str(username))
-            self.response.headers.add_header(
-                'Set-Cookie',
-                'hash_pass=%s' % hashed_password)
-            self.response.headers.add_header(
-                'Set-Cookie',
-                'logged_in=%s' % 'yes')
-            self.render("index.html",
-                        message="Welcome",
-                        username=username,
-                        login="Logout")
-        else:
-            self.render(
-                "signup.html",
-                username_error=response.get_username_error(),
-                username=response.get_username(),
-                email_error=response.get_email_error(),
-                email=response.get_email(),
-                password_error=response.get_password_error())
-
-    def signin(self, username, password, salt, passpass):
-        hashed_password = make_pw_hash(username, password, salt)
-        if hashed_password == passpass:
-            self.response.headers.add_header(
-                'Set-Cookie',
-                'username=%s' % str(username))
-            self.response.headers.add_header(
-                'Set-Cookie',
-                'hash_pass=%s' % str(hashed_password))
-            self.response.headers.add_header(
-                'Set-Cookie',
-                'logged_in=%s' % 'yes')
-            self.redirect("/")
-        else:
-            self.render(
-                "signin.html",
-                password_error="incorrect password")
-
 
 class BlogHandler(Handler):
     def render_front(self, subject="", content="", error="", likes="", author="", blogs=""):
@@ -162,17 +162,41 @@ class BlogHandler(Handler):
             self.render(
                 "blog.html", subject=subject,
                 content=content, error=error,
-                likes="", author="", blogs=blogs,
-                login="Logout")
+                likes="", author="", blogs=blogs, login="Log out")
+            self.render("logout.html",
+                        banner="logout")
         else:
             self.render(
                 "blog.html", subject=subject,
                 content=content, error=error,
-                likes="", author="", blogs=blogs,
-                login="Sign In")
+                likes="", author="", blogs=blogs, login="Sign In")
+            self.render("signin.html",
+                        banner="signin")
 
     def get(self):
         self.render_front()
+
+    def post(self):
+        username = self.request.get('username')
+        email = self.request.get('email')
+        password = self.request.get('password')
+        confirm_password = self.request.get('verify')
+        app_engine_user = db.GqlQuery(
+            "SELECT * FROM User WHERE username IN ('%s')" % username).get()
+
+        if self.isLoggedIn()[0]:
+            self.logout()
+
+        elif app_engine_user is not None:
+            passpass = app_engine_user.hashed_password
+            salt = passpass.split("|")[1]
+            self.signin(username, password, salt, passpass)
+
+        else:
+            self.signup(username, password, confirm_password, email)
+
+
+
 
 
 class AccountHandler(Handler):
@@ -198,7 +222,8 @@ class PostPage(Handler):
 
     def post(self, post_id):
         p = Posts.get_by_id(int(post_id))
-        if self.isLoggedIn()[0]:
+        user = self.isLoggedIn()
+        if user[0] and user[1][0] == p.author:
             subject = self.request.get("subject")
             content = self.request.get("content")
             checked = self.request.get("rot13_checkbox")
@@ -207,12 +232,16 @@ class PostPage(Handler):
                 content = convert_text(content)
 
             if subject and content:
-                p.update(subject=subject, content=content)
+                p.subject = subject
+                p.content = content
             else:
                 error = "we need both a subject and a blog entry"
                 self.render_front(subject, content, error)
         else:
-            p.update(likes=likes)
+            update_like = self.request.get("like_checkbox")
+            if update_like == "on":
+                num = p.likes + 1
+                p.likes = num
         p.put()
         i = p.key().id()
         self.redirect("/blog/%s" % (i))
