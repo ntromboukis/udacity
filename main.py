@@ -207,7 +207,16 @@ class BlogHandler(Handler):
                     password_error="incorrect username or password")
 
         else:
-            self.signup(username, password, confirm_password, email)
+            if self.signup(username, password, confirm_password, email):
+                self.redirect("/blog")
+            else:
+                self.render(
+                    "signin.html",
+                    username_error=response.get_username_error(),
+                    username=response.get_username(),
+                    email_error=response.get_email_error(),
+                    email=response.get_email(),
+                    password_error=response.get_password_error())
 
 
 
