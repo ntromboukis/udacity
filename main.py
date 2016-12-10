@@ -41,7 +41,6 @@ class Handler(webapp2.RequestHandler):
     def logout(self):
         self.response.headers.add_header(
             'Set-Cookie', 'logged_in=%s' % 'no')
-        self.redirect("/")
 
     def signup(self, username, password, confirm_password, email):
         response = ValidSignup(
@@ -60,18 +59,9 @@ class Handler(webapp2.RequestHandler):
             self.response.headers.add_header(
                 'Set-Cookie',
                 'logged_in=%s' % 'yes')
-            self.render("index.html",
-                        message="Welcome",
-                        username=username,
-                        login="Logout")
+            return True
         else:
-            self.render(
-                "index.html",
-                username_error=response.get_username_error(),
-                username=response.get_username(),
-                email_error=response.get_email_error(),
-                email=response.get_email(),
-                password_error=response.get_password_error())
+            return False
 
     def signin(self, username, password, salt, passpass):
         hashed_password = make_pw_hash(username, password, salt)
@@ -85,11 +75,9 @@ class Handler(webapp2.RequestHandler):
             self.response.headers.add_header(
                 'Set-Cookie',
                 'logged_in=%s' % 'yes')
-            self.redirect("/")
+            return True
         else:
-            self.render(
-                "index.html",
-                password_error="incorrect password")
+            return False
 
 
 class Posts(db.Model):
@@ -145,14 +133,34 @@ class MainHandler(Handler):
 
         if self.isLoggedIn()[0]:
             self.logout()
+            self.redirect("/")
+
 
         elif app_engine_user is not None:
             passpass = app_engine_user.hashed_password
             salt = passpass.split("|")[1]
-            self.signin(username, password, salt, passpass)
+            if self.signin(username, password, salt, passpass):
+                self.redirect("/")
+            else:
+                self.render(
+                    "signin.html",
+                    password_error="incorrect username or password")
 
         else:
-            self.signup(username, password, confirm_password, email)
+            if self.signup(username, password, confirm_password, email):
+                self.render("index.html",
+                        message="Welcome",
+                        username=username,
+                        login="Logout")
+            else:
+                self.render(
+                    "signin.html",
+                    username_error=response.get_username_error(),
+                    username=response.get_username(),
+                    email_error=response.get_email_error(),
+                    email=response.get_email(),
+                    password_error=response.get_password_error())
+
 
 
 class BlogHandler(Handler):
@@ -186,11 +194,17 @@ class BlogHandler(Handler):
 
         if self.isLoggedIn()[0]:
             self.logout()
+            self.redirect("/blog")
 
         elif app_engine_user is not None:
             passpass = app_engine_user.hashed_password
             salt = passpass.split("|")[1]
-            self.signin(username, password, salt, passpass)
+            if self.signin(username, password, salt, passpass):
+                self.redirect("/blog")
+            else:
+                self.render(
+                    "signin.html",
+                    password_error="incorrect username or password")
 
         else:
             self.signup(username, password, confirm_password, email)
