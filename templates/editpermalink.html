@@ -23,6 +23,14 @@
     <span>Likes:{{post.likes}}</span>
 </div>
 
+<div id="delete">
+    <form method="post">
+        <label>Delete Post</label>
+        <input type="checkbox" name="delete_checkbox">
+        <input type="submit" value="Delete">
+    </form>
+</div>
+
 {% else %}
 
 <h2 class="blog-title">{{post.subject}}</h2>
