@@ -1,0 +1,36 @@
+{% block modal %}
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <span class="close">x</span>
+        <h1>{{banner}}</h1>
+        <form method="post">
+            <label>
+                <div>Comment</div>
+                <textarea name="comment" placeholder="{{comment}}"></textarea>
+                <input type="submit" value="Edit">
+            </label>
+      </form>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+var edit_modal = document.getElementById('editModal');
+var edit_btn = document.getElementById("editBtn");
+var span = document.getElementsByClassName("close")[0];
+
+edit_btn.onclick = function() {
+    edit_modal.style.display = "block";
+}
+span.onclick = function() {
+    edit_modal.style.display = "none";
+}
+window.onclick = function(event) {
+    if (event.target == edit_modal) {
+        edit_modal.style.display = "none";
+    }
+}
+
+</script>
+{% endblock %}

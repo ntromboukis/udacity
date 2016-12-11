@@ -220,33 +220,43 @@ class PostPage(Handler):
             self.error(404)
         user = self.isLoggedIn()
         if user[0] and user[1][0] == post.author:
-            return self.render(
+            self.render(
                 "permalink.html",
                 post=post,
                 comments=comments,
+                username=user[1][0],
                 can_comment="yes",
                 can_edit="yes",
                 edit_link="/blog/edit/%s" % post.key().id())
+            # self.render(
+            #     "editcomment.html",
+            #     username=user[1][0],)
         elif user[0]:
             app_engine_user = db.GqlQuery(
                 "SELECT * FROM User WHERE username IN ('%s')"
                 % user[1][0]).get()
             if post_id in app_engine_user.liked:
-                return self.render(
+                self.render(
                     "permalink.html",
                     post=post,
                     status="Like",
                     liked="yes",
                     comments=comments,
                     can_comment="yes")
+                # self.render(
+                #     "editcomment.html",
+                #     username=user[1][0],)
             else:
-                return self.render(
+                self.render(
                     "permalink.html",
                     post=post,
                     status="Like",
                     liked="no",
                     comments=comments,
                     can_comment="yes")
+                # self.render(
+                #     "editcomment.html",
+                #     username=user[1][0],)
         else:
             return self.render(
                 "permalink.html",
@@ -272,7 +282,8 @@ class PostPage(Handler):
                 num = p.likes + 1
                 p.likes = num
         if comment:
-            c = Comments(username=app_engine_user.username, post=str(p.key()), comment=comment)
+            c = Comments(username=app_engine_user.username,
+                post=str(p.key()), comment=comment)
             c.put()
         p.put()
         i = p.key().id()
@@ -310,6 +321,7 @@ class NewPostHandler(Handler):
             error = "we need both a subject and a blog entry"
             ## FIX THIS ##
             self.render("newpost.html", subject=subject, content=content, error=error)
+
 
 class EditPostPage(Handler):
     def get(self, post_id):
