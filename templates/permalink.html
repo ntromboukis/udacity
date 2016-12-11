@@ -34,6 +34,10 @@
 
 <a href="{{edit_link}}">Edit</a>
 
+{% elif can_edit == "no" %}
+
+<h3>Sorry you can't edit this post</h3>
+
 {% endif %}
 
 <h2>Comments</h2>

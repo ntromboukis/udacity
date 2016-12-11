@@ -332,7 +332,8 @@ class EditPostPage(Handler):
                 can_edit="yes")
         else:
             return self.render(
-                "editpermalink.html",
+                "permalink.html",
+                post=post,
                 can_edit="no")
 
     def post(self, post_id):
