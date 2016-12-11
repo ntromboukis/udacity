@@ -3,7 +3,6 @@
 {% block content %}
 
 <h1>Blog Posts</h1>
-
 {% for post in blogs %}
 <a href="blog/{{post.key().id()}}" class="blog-title">{{post.subject}}</a>
 <div id="blog-author">Author: {{post.author}}</div>

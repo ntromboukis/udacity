@@ -4,7 +4,7 @@ import os
 import webapp2
 import jinja2
 from validate import *
-from models import User, Posts
+from models import User, Posts, Comments
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(
@@ -34,7 +34,7 @@ class Handler(webapp2.RequestHandler):
             return (False, [username, hash_pass])
 
         if status == "yes" and passpass == hash_pass:
-            return (True, [username, hash_pass])
+            return (True, [username, hash_pass, app_engine_user])
         else:
             return (False, [username, hash_pass])
 
@@ -214,6 +214,8 @@ class AccountHandler(Handler):
 class PostPage(Handler):
     def get(self, post_id):
         post = Posts.get_by_id(int(post_id))
+        comments = db.GqlQuery(
+            "SELECT * FROM Comments WHERE post IN ('%s')" % post.key()).run()
         if not post:
             self.error(404)
         user = self.isLoggedIn()
@@ -221,21 +223,21 @@ class PostPage(Handler):
             return self.render(
                 "permalink.html",
                 post=post,
-                comments=post.comments,
+                comments=comments,
                 can_comment="yes",
                 can_edit="yes",
                 edit_link="/blog/edit/%s" % post.key().id())
         elif user[0]:
-            # check if post_id in user.liked
             app_engine_user = db.GqlQuery(
-                "SELECT * FROM User WHERE username IN ('%s')" % user[1][0]).get()
+                "SELECT * FROM User WHERE username IN ('%s')"
+                % user[1][0]).get()
             if post_id in app_engine_user.liked:
                 return self.render(
                     "permalink.html",
                     post=post,
                     status="Like",
                     liked="yes",
-                    comments=post.comments,
+                    comments=comments,
                     can_comment="yes")
             else:
                 return self.render(
@@ -243,46 +245,35 @@ class PostPage(Handler):
                     post=post,
                     status="Like",
                     liked="no",
-                    comments=post.comments,
+                    comments=comments,
                     can_comment="yes")
         else:
-            return self.render("permalink.html", post=post, can_comment="no", comments=post.comments)
+            return self.render(
+                "permalink.html",
+                post=post,
+                can_comment="no",
+                comments=comments)
 
     def post(self, post_id):
         p = Posts.get_by_id(int(post_id))
         user = self.isLoggedIn()
         comment = self.request.get("comment")
-        if user[0] and user[1][0] == p.author:
-            subject = self.request.get("subject")
-            content = self.request.get("content")
-            checked = self.request.get("rot13_checkbox")
-
-            if checked == "on":
-                content = convert_text(content)
-
-            if subject and content:
-                p.subject = subject
-                p.content = content
+        update_like = self.request.get("like_checkbox")
+        app_engine_user = user[1][2]
+        if update_like == "on":
+            if post_id in app_engine_user.liked:
+                app_engine_user.liked.remove(post_id)
+                app_engine_user.put()
+                num = p.likes - 1
+                p.likes = num
             else:
-                error = "we need both a subject and a blog entry"
-                self.render_front(subject, content, error)
-        else:
-            update_like = self.request.get("like_checkbox")
-            if update_like == "on":
-                app_engine_user = db.GqlQuery(
-                    "SELECT * FROM User WHERE username in ('%s')" % user[1][0]).get()
-                if post_id in app_engine_user.liked:
-                    app_engine_user.liked.remove(post_id)
-                    app_engine_user.put()
-                    num = p.likes - 1
-                    p.likes = num
-                else:
-                    app_engine_user.liked.append(post_id)
-                    app_engine_user.put()
-                    num = p.likes + 1
-                    p.likes = num
+                app_engine_user.liked.append(post_id)
+                app_engine_user.put()
+                num = p.likes + 1
+                p.likes = num
         if comment:
-            p.comments.append(comment)
+            c = Comments(username=app_engine_user.username, post=str(p.key()), comment=comment)
+            c.put()
         p.put()
         i = p.key().id()
         self.redirect("/blog/%s" % (i))
@@ -317,7 +308,8 @@ class NewPostHandler(Handler):
             self.redirect("/blog/%s" % (i))
         else:
             error = "we need both a subject and a blog entry"
-            self.render_front(subject, content, error)
+            ## FIX THIS ##
+            self.render("newpost.html", subject=subject, content=content, error=error)
 
 class EditPostPage(Handler):
     def get(self, post_id):
@@ -344,6 +336,7 @@ class EditPostPage(Handler):
             subject = self.request.get("subject")
             content = self.request.get("content")
             checked = self.request.get("rot13_checkbox")
+            d_checked = self.request.get("delete_checkbox")
 
             if checked == "on":
                 content = convert_text(content)
@@ -351,13 +344,13 @@ class EditPostPage(Handler):
             if subject and content:
                 p.subject = subject
                 p.content = content
-            else:
-                error = "we need both a subject and a blog entry"
-                self.render_front(subject, content, error)
+                p.put()
+                i = p.key().id()
+                self.redirect("/blog/%s" % (i))
 
-            p.put()
-            i = p.key().id()
-            self.redirect("/blog/%s" % (i))
+            if d_checked == "on":
+                p.delete()
+                self.redirect("/blog")
 
         else:
             error = "we need both a subject and a blog entry"
