@@ -15,3 +15,9 @@ class User(db.Model):
     hashed_password = db.StringProperty(required=True)
     email = db.EmailProperty()
     liked = db.ListProperty(str, default=None)
+
+
+class Comments(db.Model):
+    username = db.StringProperty(required=True)
+    post = db.StringProperty(required=True)
+    comment = db.StringProperty(required=True)
