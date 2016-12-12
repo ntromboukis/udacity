@@ -18,6 +18,7 @@ class User(db.Model):
 
 
 class Comments(db.Model):
-    username = db.StringProperty(required=True)
-    post = db.StringProperty(required=True)
+    username = db.ReferenceProperty(User)
+    post = db.ReferenceProperty(Posts)
     comment = db.StringProperty(required=True)
+    comment_date = db.DateTimeProperty(auto_now_add=True)
