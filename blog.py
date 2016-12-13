@@ -1,5 +1,6 @@
 
 from handler import Handler
+from models import Post
 from validate import *
 
 # To do - Documentation
@@ -8,19 +9,31 @@ from validate import *
 class BlogHandler(Handler):
     def render_front(self, subject="", content="",
                      error="", likes="", author="", blogs=""):
-        blogs = db.GqlQuery("SELECT * FROM Post order by created desc")
+        blogs = Post.all()
+        blogs.order('-post_date')
+        print "in render_front"
+        for post in blogs:
+            print "post: %s" % post.content
         if self.is_logged_in()[0]:
-            self.render(
-                "blog.html", subject=subject,
-                content=content, error=error,
-                likes="", author="", blogs=blogs, login="Log out")
+            self.render("blog.html",
+                subject=subject,
+                content=content,
+                error=error,
+                likes="",
+                author="",
+                blogs=blogs,
+                login="Log out")
             self.render("logout.html",
                         banner="logout")
         else:
-            self.render(
-                "blog.html", subject=subject,
-                content=content, error=error,
-                likes="", author="", blogs=blogs, login="Sign In")
+            self.render("blog.html",
+                subject=subject,
+                content=content,
+                error=error,
+                likes="",
+                author="",
+                blogs=blogs,
+                login="Sign In")
             self.render("signin.html",
                         banner="signin")
 
