@@ -41,8 +41,10 @@ class Handler(webapp2.RequestHandler):
         hash_pass = self.request.cookies.get('hash_pass')
         app_engine_user = db.GqlQuery(
             "SELECT * FROM User WHERE username IN ('%s')" % username).get()
-
-        passpass = app_engine_user.hashed_password
+        try:
+            passpass = app_engine_user.hashed_password
+        except AttributeError:
+            return (False, [username, hash_pass])
 
         if logged_in == "yes" and passpass == hash_pass:
             return (True, [username, hash_pass, app_engine_user])
