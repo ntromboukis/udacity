@@ -32,6 +32,8 @@ class MainHandler(Handler):
         email = self.request.get('email')
         password = self.request.get('password')
         confirm_password = self.request.get('verify')
+        response = ValidSignup(
+            username, email, password, confirm_password)
         app_engine_user = db.GqlQuery(
             "SELECT * FROM User WHERE username IN ('%s')" % username).get()
 
@@ -50,7 +52,7 @@ class MainHandler(Handler):
                     password_error="incorrect username or password")
 
         else:
-            if self.signup(username, password, confirm_password, email):
+            if self.signup(username, password, confirm_password, email, response):
                 self.render("index.html",
                             message="Welcome",
                             username=username,

@@ -18,7 +18,7 @@ class ValidSignup(list):
         self.valid = True
         self.valid_username(username)
         self.username = ""
-        self.username_error = "Please enter a valid Username"
+        self.username_error = ""
         self.valid_email(email)
         self.email = ""
         self.email_error = "Please enter a valid Email"
@@ -30,9 +30,10 @@ class ValidSignup(list):
             "SELECT * FROM User WHERE username IN ('%s')" % username).get()
         if u == username:
             self.valid = False
-            return True
+            # return True
         else:
-            return False
+            self.username_error = "That user doesn't exist"
+            # return False
 
     def valid_username(self, username):
         USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
@@ -40,6 +41,7 @@ class ValidSignup(list):
             self.user_exists(username)
             self.username = username
         else:
+            self.username_error = "Enter a valid username"
             self.valid = False
 
     def valid_email(self, email):

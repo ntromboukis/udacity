@@ -58,7 +58,7 @@ class Handler(webapp2.RequestHandler):
         self.response.headers.add_header(
             'Set-Cookie', 'logged_in=%s' % 'no')
 
-    def signup(self, username, password, confirm_password, email):
+    def signup(self, username, password, confirm_password, email, response):
         '''
             - Gets information from signup modal and if valid
             creats a new user and stores it into the db.
@@ -68,8 +68,6 @@ class Handler(webapp2.RequestHandler):
             - True if successful
             - False if unsuccessful
         '''
-        response = ValidSignup(
-            username, email, password, confirm_password)
         if response.is_valid():
             hashed_password = make_pw_hash(username, password)
             u = User(username=username,
