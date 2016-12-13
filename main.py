@@ -9,7 +9,18 @@ from models import Comment
 
 
 class MainHandler(Handler):
+    '''
+        Handler subclass for "/" extension
+
+        Methods
+        - get
+        - post
+    '''
     def get(self):
+        '''
+            Checks if user is logged in and renders signup, signin, logout
+            button appropriately
+        '''
         if self.is_logged_in()[0]:
                 self.render("index.html",
                             message="Welcome",
@@ -28,6 +39,10 @@ class MainHandler(Handler):
                         banner="signin")
 
     def post(self):
+        '''
+            Gets form information and applies it to signup, signin, or logout
+            a user. Errors will display if information is invalid.
+        '''
         username = self.request.get('username')
         email = self.request.get('email')
         password = self.request.get('password')
@@ -68,16 +83,37 @@ class MainHandler(Handler):
 
 
 class AccountHandler(Handler):
-    def render_front(self, subject="", content="", error="", user=""):
+    '''
+        Handler subclass for the "/account" extension.
+    '''
+    def render_front(self, error=""):
+        '''
+            Params: error
+            Accepts error message and renders page with all users
+        '''
         user = db.GqlQuery("SELECT * FROM User")
         self.render("account.html", user=user)
 
     def get(self):
+        '''
+            Calls render_front method
+        '''
         self.render_front()
 
 
 class EditCommentHandler(Handler):
+    '''
+        Handler subclass responsible for the "/blog/edit/comment/[0-9]+"
+        extension.
+    '''
     def get(self, comment_id):
+        '''
+            Params: comment_id
+            Query's Comment Model using comment_id, checks if logged in user
+            is author of comment and renders "editcomment.html" appropriately
+
+            If invalid comment_id, renders "404.html"
+        '''
         c = Comment.get_by_id(int(comment_id))
         if not c:
             return self.render("404.html")
@@ -93,6 +129,12 @@ class EditCommentHandler(Handler):
                 can_edit="no")
 
     def post(self, comment_id):
+        '''
+            Params: comment_id
+            Query's Comment Model using comment_id, requests comment and
+            delete_checkbox from form. Edits comment appropriately then
+            saves to db
+        '''
         c = Comment.get_by_id(int(comment_id))
         comment = self.request.get("comment")
         delete_checkbox = self.request.get("delete_checkbox")
