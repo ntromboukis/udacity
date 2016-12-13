@@ -1,9 +1,9 @@
 ## This is the 3rd project for Udacity's FullStack Nanodegree program
 
 ###Prerequisists
-1. [Google App Engine Launcher]{https://cloud.google.com/appengine/downloads}
-2. [Python]{https://www.python.org/downloads/} *if you don't have it already*
-3. [App engin project]{https://developers.google.com/ad-exchange/rtb/open-bidder/google-app-guide}
+1. [Google App Engine Launcher](https://cloud.google.com/appengine/downloads)
+2. [Python](https://www.python.org/downloads/) *if you don't have it already*
+3. [App engin project](https://developers.google.com/ad-exchange/rtb/open-bidder/google-app-guide)
 
 ###Steps to run program
 1. Clone or Download repository from link above
@@ -13,8 +13,8 @@
     - Go to File, Add Existing Application
     - Browse to this project
     - Help
-        - [App Engine Quickstart Page]{https://cloud.google.com/appengine/docs/python/quickstart}
-        - [App Engine Docs]{https://cloud.google.com/appengine/docs}
+        - [App Engine Quickstart Page](https://cloud.google.com/appengine/docs/python/quickstart)
+        - [App Engine Docs](https://cloud.google.com/appengine/docs)
 4. In Google App Engine Launcher hit the Run button
 5. Navigate to '''localhost:**port_number**''' in your browser
     - Note: **port_number** is the number in the '''Port''' column of Google App Engine Launcher
@@ -27,4 +27,4 @@
     3. Now you can comment on your post if you would like, or edit your current post.
 
 
-[Live version]{http://blog-project-ud.appspot.com/}
+[Live version](http://blog-project-ud.appspot.com/)
