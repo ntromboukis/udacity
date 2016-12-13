@@ -146,7 +146,8 @@ class EditPostHandler(Handler):
     def post(self, post_id):
         p = Post.get_by_id(int(post_id))
         user = self.is_logged_in()
-        if user[0] and user[1][0] == p.author:
+        print "in post"
+        if user[0] and user[1][0] == p.author.username:
             subject = self.request.get("subject")
             content = self.request.get("content")
             checked = self.request.get("rot13_checkbox")
@@ -156,6 +157,7 @@ class EditPostHandler(Handler):
                 content = convert_text(content)
 
             if subject and content:
+                print "in subject and content"
                 p.subject = subject
                 p.content = content
                 p.put()
@@ -167,6 +169,7 @@ class EditPostHandler(Handler):
                     self.redirect("/blog")
 
             else:
+                print "in else"
                 error = "we need both a subject and a blog entry"
                 self.redirect("/blog")
 
