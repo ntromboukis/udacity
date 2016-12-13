@@ -5,6 +5,7 @@ from validate import *
 from handler import Handler
 from blog import BlogHandler
 from post import PostHandler, NewPostHandler, EditPostHandler, deletePosts
+from models import Comment
 
 
 class MainHandler(Handler):
@@ -73,22 +74,31 @@ class AccountHandler(Handler):
         self.render_front()
 
 
-class CommentHandler(Handler):
-    def comment(self):
-        comment = self.request.get("postComment")
-        print "comment %s" % comment
+class EditCommentHandler(Handler):
+    def get(self, comment_id):
+        c = Comment.get_by_id(int(comment_id))
+        comment = c.comment
+        author = c.username.username
+        user = self.is_logged_in()
+        if author == user[1][0]:
+            self.render("editcomment.html",
+                comment=comment,
+                can_edit="yes")
+        else:
+            self.render("editcomment.html",
+                can_edit="no")
 
-    def post(self):
-        print "in comment post"
-        self.comment()
+    def post(self, comment_id):
+        c = Comment.get_by_id(int(comment_id))
+        comment = self.request.get("comment")
+        delete_checkbox = self.request.get("delete_checkbox")
+        if delete_checkbox == "on":
+            c.delete()
+        else:
+            c.comment = comment
+            c.put()
+        self.redirect("/blog/%s" % c.post.key().id())
 
-# class EditCommentHandler(Handler):
-#     def get(self, post_id):
-#         post = Post.get_by_id(str(post_id))
-
-
-
-#     def post(self):
 
 
 app = webapp2.WSGIApplication([
@@ -97,7 +107,7 @@ app = webapp2.WSGIApplication([
     ('/newpost', NewPostHandler),
     ('/blog/([0-9]+)', PostHandler),
     ('/blog/edit/([0-9]+)', EditPostHandler),
-    ('blog/comment/([0-9]+)', CommentHandler),
+    ('/blog/edit/comment/([0-9]+)', EditCommentHandler),
     ('/account', AccountHandler),
     ('/deleteall', deletePosts)
 

@@ -43,7 +43,7 @@
         <li>{{comment.comment}}</li>
         <li>By:{{comment.username.username}}</li>
          {% if comment.username.username == username %}
-            <a href="/blog/edit/comment/{{post.key().id()}}">Edit</a>
+            <a href="/blog/edit/comment/{{comment.key().id()}}">Edit</a>
          {% endif %}
         <hr>
     {% endfor %}
