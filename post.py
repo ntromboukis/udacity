@@ -11,11 +11,9 @@ class PostHandler(Handler):
         comments = Comment.all()
         comments.filter('post =', post.key())
         comments.order('-comment_date')
-        print "comments in post get: %s" % comments
-        for comment in comments:
-            print comment
         if not post:
             self.error(404)
+            return self.render("404.html")
         user = self.is_logged_in()
         if user[0] and user[1][0] == post.author.username:
             return self.render(
@@ -131,6 +129,7 @@ class EditPostHandler(Handler):
         post = Post.get_by_id(int(post_id))
         if not post:
             self.error(404)
+            return self.render("404.html")
         user = self.is_logged_in()
         if user[0] and user[1][0] == post.author.username:
             return self.render(

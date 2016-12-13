@@ -77,6 +77,8 @@ class AccountHandler(Handler):
 class EditCommentHandler(Handler):
     def get(self, comment_id):
         c = Comment.get_by_id(int(comment_id))
+        if not c:
+            return self.render("404.html")
         comment = c.comment
         author = c.username.username
         user = self.is_logged_in()
@@ -98,7 +100,6 @@ class EditCommentHandler(Handler):
             c.comment = comment
             c.put()
         self.redirect("/blog/%s" % c.post.key().id())
-
 
 
 app = webapp2.WSGIApplication([
