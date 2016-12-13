@@ -1,13 +1,21 @@
-
 from handler import Handler
 from models import Post
 from validate import *
 
-# To do - Documentation
-
 
 class BlogHandler(Handler):
+    '''
+        Handler subclass for /blog extension
+
+        Methods
+        - get
+        - post
+    '''
     def get(self):
+        '''
+            Retrieves all blog posts from db, orders them then renders
+            blog.html with those posts.
+        '''
         posts = Post.all()
         posts.order('-post_date')
         if self.is_logged_in()[0]:
@@ -24,6 +32,9 @@ class BlogHandler(Handler):
                         banner="signin")
 
     def post(self):
+        '''
+            Includes signup, signin, logout logic
+        '''
         username = self.request.get('username')
         email = self.request.get('email')
         password = self.request.get('password')
