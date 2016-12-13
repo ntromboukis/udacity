@@ -32,11 +32,7 @@
 
 {% if can_edit == "yes" %}
 
-<a href="{{edit_link}}">Edit</a>
-
-{% elif can_edit == "no" %}
-
-<h3>Sorry you can't edit this post</h3>
+    <a href="{{edit_link}}">Edit</a>
 
 {% endif %}
 
@@ -44,62 +40,37 @@
     <h2>Comments</h2>
     <ul style="list-style:None">
     {% for comment in comments %}
-    <li>{{comment.comment}}</li>
-    <br><span>By:{{comment.username}}</span>
-    <hr>
-        <div id="{{comment.key().id()}}" class="modal">
-        <div class="modal-content">
-            <span class="close">x</span>
-            <h1>{{banner}}</h1>
-            <form method="post" id="editComment">
-                <label>
-                    <div>Comment</div>
-                    <textarea name="editedComment">{{comment.comment}}</textarea>
-                    <input type="submit" value="Edit">
-                </label>
-          </form>
-        </div>
-    </div>
+        <li>{{comment.comment}}</li>
+        <li>By:{{comment.username.username}}</li>
+         {% if comment.username.username == username %}
+            <a href="/blog/edit/comment/{{post.key().id()}}">Edit</a>
+         {% endif %}
+        <hr>
+    {% endfor %}
     </ul>
 
-     {% if comment.username == username %}
-    <button type="button" data-toggle="modal" data-target="{{comment.key().id()}}" name="edit" id="editBtn">Edit</button>
-
-    <script type="text/javascript">
-        var {{comment.key().id()}} = document.getElementById('{{comment.key().id()}}');
-        var edit_btn = document.getElementById("editBtn");
-        var span = document.getElementsByClassName("close")[0];
-
-        edit_btn.onclick = function() {
-            {{comment.key().id()}}.style.display = "block";
-        }
-        span.onclick = function() {
-            {{comment.key().id()}}.style.display = "none";
-        }
-        window.onclick = function(event) {
-            if (event.target == {{comment.key().id()}}) {
-                {{comment.key().id()}}.style.display = "none";
-            }
-        }
-    </script>
-    {% endif %}
-    {% endfor %}
-
 {% endif %}
+
+
+
+
 
 {% if can_comment == "yes" %}
 
-<form action="/blog/comment/{{comment.key().id()}}" method="post">
-     <label>
-            <div>Comment</div>
-            <textarea placeholder="Insert comment here!" id="postComment"></textarea>
-            <input type="submit" value="Comment">
-        </label>
-</form>
+    <form id="postComment" method="post">
+         <label>
+                <div>Comment</div>
+                <textarea name="postComment" placeholder="Insert comment here!"></textarea>
+                <input type="submit" value="Comment">
+            </label>
+    </form>
 
 {% else %}
-<span>Sign In to comment!</span>
+    <span>Sign In to comment!</span>
 {% endif %}
+
+
+
 
 
 

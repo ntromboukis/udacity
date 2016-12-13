@@ -8,16 +8,17 @@ from validate import *
 class PostHandler(Handler):
     def get(self, post_id):
         post = Post.get_by_id(int(post_id))
-        # comments = db.GqlQuery(
-        #     "SELECT * FROM Comment WHERE post IN ('%s')" % post.key()).run()
-        comments = Comment.get_by_id(int(post_id))
+        comments = Comment.all()
+        comments.filter('post =', post.key())
+        comments.order('-comment_date')
         print "comments in post get: %s" % comments
+        for comment in comments:
+            print comment
         if not post:
             self.error(404)
         user = self.is_logged_in()
-        if user[0] and user[1][0] == post.author:
-            print "post key id: %s" % post.key().id()
-            self.render(
+        if user[0] and user[1][0] == post.author.username:
+            return self.render(
                 "permalink.html",
                 post=post,
                 comments=comments,
@@ -26,11 +27,12 @@ class PostHandler(Handler):
                 can_edit="yes",
                 edit_link="/blog/edit/%s" % post.key().id())
         elif user[0]:
+            print "in elif"
             app_engine_user = db.GqlQuery(
                 "SELECT * FROM User WHERE username IN ('%s')"
                 % user[1][0]).get()
             if post_id in app_engine_user.liked:
-                self.render(
+                return self.render(
                     "permalink.html",
                     post=post,
                     status="Like",
@@ -38,7 +40,7 @@ class PostHandler(Handler):
                     comments=comments,
                     can_comment="yes")
             else:
-                self.render(
+                return self.render(
                     "permalink.html",
                     post=post,
                     status="Like",
@@ -57,6 +59,11 @@ class PostHandler(Handler):
         user = self.is_logged_in()
         update_like = self.request.get("like_checkbox")
         app_engine_user = user[1][2]
+        comment = self.request.get('postComment')
+        print "1comment %s" % comment
+        editedComment = self.request.get("editComment")
+        print "1edited comment %s" % editedComment
+
         if update_like == "on":
             if post_id in app_engine_user.liked:
                 app_engine_user.liked.remove(post_id)
@@ -68,13 +75,18 @@ class PostHandler(Handler):
                 app_engine_user.put()
                 num = p.likes + 1
                 p.likes = num
+
         if comment:
-            c = Comments(username=app_engine_user.key(),
+            print "comment %s" % comment
+            c = Comment(username=app_engine_user.key(),
                          post=p.key(), comment=comment)
             c.put()
+
         if editedComment:
+            print "edited comment %s" % editedComment
             c = db.get(p.key())
             c.comment = editedComment
+            c.put()
             p.put()
         p.put()
         i = p.key().id()
@@ -94,16 +106,17 @@ class NewPostHandler(Handler):
 
     def post(self):
         username = self.request.cookies.get("username")
-        subject = self.request.get("subject")
-        content = self.request.get("content")
-        checked = self.request.get("rot13_checkbox")
+        author = db.GqlQuery("SELECT * FROM User WHERE username IN ('%s')" % username).get()
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+        checked = self.request.get('rot13_checkbox')
 
         if checked == "on":
             content = convert_text(content)
 
         if subject and content:
             p = Post(subject=subject, content=content,
-                      author=username, likes=0)
+                      author=author, likes=0)
             p.put()
             i = p.key().id()
             self.redirect("/blog/%s" % (i))
@@ -119,7 +132,7 @@ class EditPostHandler(Handler):
         if not post:
             self.error(404)
         user = self.is_logged_in()
-        if user[0] and user[1][0] == post.author:
+        if user[0] and user[1][0] == post.author.username:
             return self.render(
                 "editpermalink.html",
                 post=post,
@@ -149,13 +162,13 @@ class EditPostHandler(Handler):
                 i = p.key().id()
                 self.redirect("/blog/%s" % (i))
 
-            if d_checked == "on":
-                p.delete()
-                self.redirect("/blog")
+                if d_checked == "on":
+                    p.delete()
+                    self.redirect("/blog")
 
-        else:
-            error = "we need both a subject and a blog entry"
-            self.render_front(subject, content, error)
+            else:
+                error = "we need both a subject and a blog entry"
+                self.redirect("/blog")
 
 
 class deletePosts(Handler):

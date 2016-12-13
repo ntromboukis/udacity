@@ -7,38 +7,21 @@ from validate import *
 
 
 class BlogHandler(Handler):
-    def render_front(self, subject="", content="",
-                     error="", likes="", author="", blogs=""):
-        blogs = Post.all()
-        blogs.order('-post_date')
-        print "in render_front"
-        for post in blogs:
-            print "post: %s" % post.content
+    def get(self):
+        posts = Post.all()
+        posts.order('-post_date')
         if self.is_logged_in()[0]:
             self.render("blog.html",
-                subject=subject,
-                content=content,
-                error=error,
-                likes="",
-                author="",
-                blogs=blogs,
+                posts=posts,
                 login="Log out")
             self.render("logout.html",
                         banner="logout")
         else:
             self.render("blog.html",
-                subject=subject,
-                content=content,
-                error=error,
-                likes="",
-                author="",
-                blogs=blogs,
+                posts=posts,
                 login="Sign In")
             self.render("signin.html",
                         banner="signin")
-
-    def get(self):
-        self.render_front()
 
     def post(self):
         username = self.request.get('username')

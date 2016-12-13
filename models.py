@@ -1,19 +1,19 @@
 from google.appengine.ext import db
 
 
-class Post(db.Model):
-    subject = db.StringProperty(required=True)
-    content = db.TextProperty(required=True)
-    post_date = db.DateTimeProperty(auto_now_add=True)
-    author = db.StringProperty(required=True)
-    likes = db.IntegerProperty(default=0)
-
-
 class User(db.Model):
     username = db.StringProperty(required=True)
     hashed_password = db.StringProperty(required=True)
     email = db.EmailProperty()
     liked = db.ListProperty(str, default=None)
+
+
+class Post(db.Model):
+    subject = db.StringProperty(required=True)
+    content = db.StringProperty(required=True)
+    post_date = db.DateTimeProperty(auto_now_add=True)
+    author = db.ReferenceProperty(User)
+    likes = db.IntegerProperty(default=0)
 
 
 class Comment(db.Model):

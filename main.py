@@ -82,6 +82,14 @@ class CommentHandler(Handler):
         print "in comment post"
         self.comment()
 
+# class EditCommentHandler(Handler):
+#     def get(self, post_id):
+#         post = Post.get_by_id(str(post_id))
+
+
+
+#     def post(self):
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
