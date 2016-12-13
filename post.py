@@ -2,11 +2,22 @@ from handler import Handler
 from models import Post, Comment
 from validate import *
 
-# To do - Documentation
-
 
 class PostHandler(Handler):
+    '''
+        Handler subclass for "/blog/([0-9]+" extension
+
+        Methods: [get, post]
+    '''
     def get(self, post_id):
+        '''
+            Params: post_id
+
+            Query:
+                Post Model by post_id
+                Comment Model by post.key()
+            Displays all comments attached to a particular Post.
+        '''
         post = Post.get_by_id(int(post_id))
         comments = Comment.all()
         comments.filter('post =', post.key())
@@ -25,7 +36,6 @@ class PostHandler(Handler):
                 can_edit="yes",
                 edit_link="/blog/edit/%s" % post.key().id())
         elif user[0]:
-            print "in elif"
             app_engine_user = db.GqlQuery(
                 "SELECT * FROM User WHERE username IN ('%s')"
                 % user[1][0]).get()
@@ -53,14 +63,21 @@ class PostHandler(Handler):
                 comments=comments)
 
     def post(self, post_id):
+        '''
+            Params: post_id
+
+            Query:
+                Post Model by post_id
+
+            Updates db if user likes a post, adds comment if present,
+            links to page for user to edit or delete their comment.
+        '''
         p = Post.get_by_id(int(post_id))
         user = self.is_logged_in()
         update_like = self.request.get("like_checkbox")
         app_engine_user = user[1][2]
         comment = self.request.get('postComment')
-        print "1comment %s" % comment
         editedComment = self.request.get("editComment")
-        print "1edited comment %s" % editedComment
 
         if update_like == "on":
             if post_id in app_engine_user.liked:
@@ -75,13 +92,11 @@ class PostHandler(Handler):
                 p.likes = num
 
         if comment:
-            print "comment %s" % comment
             c = Comment(username=app_engine_user.key(),
                          post=p.key(), comment=comment)
             c.put()
 
         if editedComment:
-            print "edited comment %s" % editedComment
             c = db.get(p.key())
             c.comment = editedComment
             c.put()
@@ -92,7 +107,17 @@ class PostHandler(Handler):
 
 
 class NewPostHandler(Handler):
+    '''
+        Handler subclass for "/newpost" extension
+
+        Methods: [get, post]
+    '''
     def get(self):
+        '''
+            Checks if user is signed in
+            IF user is not signed in: reroutes to "index.html"
+            ELSE: renders "newpost.html"
+        '''
         if self.is_logged_in()[0]:
             self.render("newpost.html",
                         login="Logout")
@@ -103,6 +128,11 @@ class NewPostHandler(Handler):
                         login="Sign In")
 
     def post(self):
+        '''
+            Checks to see if user is logged in.
+            Requests subject, content, rot_13checkbox from form and creates
+            new post appropriately
+        '''
         username = self.request.cookies.get("username")
         author = db.GqlQuery("SELECT * FROM User WHERE username IN ('%s')" % username).get()
         subject = self.request.get('subject')
@@ -120,12 +150,23 @@ class NewPostHandler(Handler):
             self.redirect("/blog/%s" % (i))
         else:
             error = "we need both a subject and a blog entry"
-            ## FIX THIS ##
             self.render("newpost.html", subject=subject, content=content, error=error)
 
 
 class EditPostHandler(Handler):
+    '''
+        Handler subclass for "/blog/edit/([0-9]+" extension
+
+        Methods: [get, post]
+    '''
     def get(self, post_id):
+        '''
+            Params: post_id
+            Query's Post Model using post_id
+            IF no Post: renders "404.html"
+            ELSE: Checks if user is author of post and renders
+            "editpermalink.html" with appropriate permissions
+        '''
         post = Post.get_by_id(int(post_id))
         if not post:
             self.error(404)
@@ -143,9 +184,13 @@ class EditPostHandler(Handler):
                 can_edit="no")
 
     def post(self, post_id):
+        '''
+            Params: post_id
+            Query's Post Model using post_id
+            Requests information from form, edits post appropriately
+        '''
         p = Post.get_by_id(int(post_id))
         user = self.is_logged_in()
-        print "in post"
         if user[0] and user[1][0] == p.author.username:
             subject = self.request.get("subject")
             content = self.request.get("content")
@@ -156,7 +201,6 @@ class EditPostHandler(Handler):
                 content = convert_text(content)
 
             if subject and content:
-                print "in subject and content"
                 p.subject = subject
                 p.content = content
                 p.put()
@@ -168,13 +212,18 @@ class EditPostHandler(Handler):
                     self.redirect("/blog")
 
             else:
-                print "in else"
                 error = "we need both a subject and a blog entry"
                 self.redirect("/blog")
 
 
 class deletePosts(Handler):
+    '''
+        Handler subclass for "/deleteAll" extension
+    '''
     def get(self):
+        '''
+            Removes all User, Post, and Comment Objects from db
+        '''
         allPosts = db.GqlQuery("SELECT * from Post")
         db.delete(allPosts)
         allUsers = db.GqlQuery("SELECT * FROM User")
