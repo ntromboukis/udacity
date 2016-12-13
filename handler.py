@@ -61,7 +61,7 @@ class Handler(webapp2.RequestHandler):
     def signup(self, username, password, confirm_password, email, response):
         '''
             - Gets information from signup modal and if valid
-            creats a new user and stores it into the db.
+            creates a new user and stores it into the db.
             - Sets cookies to username, hash_pass, and logged_in
             if valid information.
             Returns
