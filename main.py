@@ -73,7 +73,14 @@ class AccountHandler(Handler):
         self.render_front()
 
 
+class CommentHandler(Handler):
+    def comment(self):
+        comment = self.request.get("postComment")
+        print "comment %s" % comment
 
+    def post(self):
+        print "in comment post"
+        self.comment()
 
 
 app = webapp2.WSGIApplication([
@@ -82,6 +89,7 @@ app = webapp2.WSGIApplication([
     ('/newpost', NewPostHandler),
     ('/blog/([0-9]+)', PostHandler),
     ('/blog/edit/([0-9]+)', EditPostHandler),
+    ('blog/comment/([0-9]+)', CommentHandler),
     ('/account', AccountHandler),
     ('/deleteall', deletePosts)
 

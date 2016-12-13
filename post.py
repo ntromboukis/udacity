@@ -1,5 +1,5 @@
 from handler import Handler
-from models import Posts, Comments
+from models import Post, Comment
 from validate import *
 
 # To do - Documentation
@@ -7,13 +7,16 @@ from validate import *
 
 class PostHandler(Handler):
     def get(self, post_id):
-        post = Posts.get_by_id(int(post_id))
-        comments = db.GqlQuery(
-            "SELECT * FROM Comments WHERE post IN ('%s')" % post.key()).run()
+        post = Post.get_by_id(int(post_id))
+        # comments = db.GqlQuery(
+        #     "SELECT * FROM Comment WHERE post IN ('%s')" % post.key()).run()
+        comments = Comment.get_by_id(int(post_id))
+        print "comments in post get: %s" % comments
         if not post:
             self.error(404)
         user = self.is_logged_in()
         if user[0] and user[1][0] == post.author:
+            print "post key id: %s" % post.key().id()
             self.render(
                 "permalink.html",
                 post=post,
@@ -50,10 +53,8 @@ class PostHandler(Handler):
                 comments=comments)
 
     def post(self, post_id):
-        p = Posts.get_by_id(int(post_id))
+        p = Post.get_by_id(int(post_id))
         user = self.is_logged_in()
-        editedComment = self.request.get("editedComment")
-        comment = self.request.get("comment")
         update_like = self.request.get("like_checkbox")
         app_engine_user = user[1][2]
         if update_like == "on":
@@ -101,7 +102,7 @@ class NewPostHandler(Handler):
             content = convert_text(content)
 
         if subject and content:
-            p = Posts(subject=subject, content=content,
+            p = Post(subject=subject, content=content,
                       author=username, likes=0)
             p.put()
             i = p.key().id()
@@ -114,7 +115,7 @@ class NewPostHandler(Handler):
 
 class EditPostHandler(Handler):
     def get(self, post_id):
-        post = Posts.get_by_id(int(post_id))
+        post = Post.get_by_id(int(post_id))
         if not post:
             self.error(404)
         user = self.is_logged_in()
@@ -130,7 +131,7 @@ class EditPostHandler(Handler):
                 can_edit="no")
 
     def post(self, post_id):
-        p = Posts.get_by_id(int(post_id))
+        p = Post.get_by_id(int(post_id))
         user = self.is_logged_in()
         if user[0] and user[1][0] == p.author:
             subject = self.request.get("subject")
@@ -159,8 +160,10 @@ class EditPostHandler(Handler):
 
 class deletePosts(Handler):
     def get(self):
-        allPosts = db.GqlQuery("SELECT * from Posts")
+        allPosts = db.GqlQuery("SELECT * from Post")
         db.delete(allPosts)
         allUsers = db.GqlQuery("SELECT * FROM User")
         db.delete(allUsers)
+        allComments = db.GqlQuery("SELECT * FROM Comment")
+        db.delete(allComments)
         self.render("delete.html", message="success")

@@ -8,7 +8,7 @@ from validate import *
 class BlogHandler(Handler):
     def render_front(self, subject="", content="",
                      error="", likes="", author="", blogs=""):
-        blogs = db.GqlQuery("SELECT * FROM Posts order by created desc")
+        blogs = db.GqlQuery("SELECT * FROM Post order by created desc")
         if self.is_logged_in()[0]:
             self.render(
                 "blog.html", subject=subject,

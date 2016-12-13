@@ -1,13 +1,12 @@
 from google.appengine.ext import db
 
 
-class Posts(db.Model):
+class Post(db.Model):
     subject = db.StringProperty(required=True)
     content = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add=True)
+    post_date = db.DateTimeProperty(auto_now_add=True)
     author = db.StringProperty(required=True)
     likes = db.IntegerProperty(default=0)
-    comments = db.ListProperty(str, default=None)
 
 
 class User(db.Model):
@@ -17,8 +16,8 @@ class User(db.Model):
     liked = db.ListProperty(str, default=None)
 
 
-class Comments(db.Model):
+class Comment(db.Model):
     username = db.ReferenceProperty(User)
-    post = db.ReferenceProperty(Posts)
+    post = db.ReferenceProperty(Post)
     comment = db.StringProperty(required=True)
     comment_date = db.DateTimeProperty(auto_now_add=True)
