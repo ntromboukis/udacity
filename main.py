@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 import webapp2
-from validate import *
 from handlers import *
+from validate import *
+
 
 
 app = webapp2.WSGIApplication([

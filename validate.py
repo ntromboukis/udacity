@@ -148,7 +148,4 @@ def valid_pw(name, pw):
     h = pw
     info = pw.split('|')
     v = make_pw_hash(name, pw, info[1])
-    if v == h:
-        return True
-    else:
-        return False
+    return True if v == h else False

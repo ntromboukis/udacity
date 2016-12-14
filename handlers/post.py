@@ -71,8 +71,9 @@ class PostHandler(Handler):
             Updates db if user likes a post, adds comment if present,
             links to page for user to edit or delete their comment.
         '''
-        p = Post.get_by_id(int(post_id))
+        post = Post.get_by_id(int(post_id))
         if not post:
+            self.error(404)
             self.redirect("/blog")
         user = self.is_logged_in()
         update_like = self.request.get("like_checkbox")
@@ -84,24 +85,24 @@ class PostHandler(Handler):
             if post_id in app_engine_user.liked:
                 app_engine_user.liked.remove(post_id)
                 app_engine_user.put()
-                num = p.likes - 1
-                p.likes = num
+                num = post.likes - 1
+                post.likes = num
             else:
                 app_engine_user.liked.append(post_id)
                 app_engine_user.put()
-                num = p.likes + 1
-                p.likes = num
+                num = post.likes + 1
+                post.likes = num
 
         if comment:
             c = Comment(username=app_engine_user.key(),
-                        post=p.key(), comment=comment)
+                        post=post.key(), comment=comment)
             c.put()
 
         if editedComment:
-            c = db.get(p.key())
+            c = db.get(post.key())
             c.comment = editedComment
             c.put()
-            p.put()
-        p.put()
-        i = p.key().id()
+            post.put()
+        post.put()
+        i = post.key().id()
         self.redirect("/blog/%s" % (i))

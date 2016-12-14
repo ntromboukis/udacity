@@ -19,6 +19,7 @@ class EditPostHandler(Handler):
         '''
         post = Post.get_by_id(int(post_id))
         if not post:
+            self.error(404)
             return self.render("404.html")
         user = self.is_logged_in()
         if user[0] and user[1][0] == post.author.username:
@@ -38,11 +39,12 @@ class EditPostHandler(Handler):
             Query's Post Model using post_id
             Requests information from form, edits post appropriately
         '''
-        p = Post.get_by_id(int(post_id))
+        post = Post.get_by_id(int(post_id))
         if not post:
+            self.error(404)
             return self.render("404.html")
         user = self.is_logged_in()
-        if user[0] and user[1][0] == p.author.username:
+        if user[0] and user[1][0] == post.author.username:
             subject = self.request.get("subject")
             content = self.request.get("content")
             checked = self.request.get("rot13_checkbox")
@@ -52,15 +54,15 @@ class EditPostHandler(Handler):
                 content = convert_text(content)
 
             if subject and content:
-                p.subject = subject
-                p.content = content
-                p.put()
-                i = p.key().id()
+                post.subject = subject
+                post.content = content
+                post.put()
+                i = post.key().id()
                 self.redirect("/blog/%s" % (i))
 
-                if d_checked == "on":
-                    p.delete()
-                    self.redirect("/blog")
+            if d_checked == "on":
+                post.delete()
+                self.redirect("/blog")
 
             else:
                 self.redirect("/blog")
