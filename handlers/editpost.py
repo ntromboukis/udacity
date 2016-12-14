@@ -19,7 +19,6 @@ class EditPostHandler(Handler):
         '''
         post = Post.get_by_id(int(post_id))
         if not post:
-            self.error(404)
             return self.render("404.html")
         user = self.is_logged_in()
         if user[0] and user[1][0] == post.author.username:
@@ -40,6 +39,8 @@ class EditPostHandler(Handler):
             Requests information from form, edits post appropriately
         '''
         p = Post.get_by_id(int(post_id))
+        if not post:
+            return self.render("404.html")
         user = self.is_logged_in()
         if user[0] and user[1][0] == p.author.username:
             subject = self.request.get("subject")

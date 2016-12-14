@@ -37,6 +37,8 @@ class EditCommentHandler(Handler):
             saves to db
         '''
         c = Comment.get_by_id(int(comment_id))
+        if not c:
+            return self.render("404.html")
         comment = self.request.get("comment")
         delete_checkbox = self.request.get("delete_checkbox")
         if delete_checkbox == "on":

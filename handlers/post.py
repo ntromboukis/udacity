@@ -19,6 +19,8 @@ class PostHandler(Handler):
             Displays all comments attached to a particular Post.
         '''
         post = Post.get_by_id(int(post_id))
+        if not post:
+            self.redirect("/blog")
         comments = Comment.all()
         comments.filter('post =', post.key())
         comments.order('-comment_date')
@@ -64,15 +66,14 @@ class PostHandler(Handler):
 
     def post(self, post_id):
         '''
-            Params: post_id
-
-            Query:
-                Post Model by post_id
-
+            Params: [post_id]
+            Description:
             Updates db if user likes a post, adds comment if present,
             links to page for user to edit or delete their comment.
         '''
         p = Post.get_by_id(int(post_id))
+        if not post:
+            self.redirect("/blog")
         user = self.is_logged_in()
         update_like = self.request.get("like_checkbox")
         app_engine_user = user[1][2]
@@ -104,20 +105,3 @@ class PostHandler(Handler):
         p.put()
         i = p.key().id()
         self.redirect("/blog/%s" % (i))
-
-
-class deletePosts(Handler):
-    '''
-        Handler subclass for "/deleteAll" extension
-    '''
-    def get(self):
-        '''
-            Removes all User, Post, and Comment Objects from db
-        '''
-        allPosts = db.GqlQuery("SELECT * from Post")
-        db.delete(allPosts)
-        allUsers = db.GqlQuery("SELECT * FROM User")
-        db.delete(allUsers)
-        allComments = db.GqlQuery("SELECT * FROM Comment")
-        db.delete(allComments)
-        self.render("delete.html", message="success")

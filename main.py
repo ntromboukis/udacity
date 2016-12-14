@@ -13,6 +13,5 @@ app = webapp2.WSGIApplication([
     ('/blog/edit/([0-9]+)', EditPostHandler),
     ('/blog/edit/comment/([0-9]+)', EditCommentHandler),
     ('/account', AccountHandler)
-    # ('/deleteall', deletePosts)
 
 ], debug=True)
