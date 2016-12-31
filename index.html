@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Using closures in event listeners</title>
-  </head>
-  <body>
+    <title>Top Speakeasies in NYC</title>
+</head>
+<body>
+    <div id="main">
+        <h1 id="title">
+            Top Speakeasies in NYC
+        </h1>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <ul id='marker-list'></ul>
+        </div>
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+    </div>
+
     <div id="map"></div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFy093f589Vl0gwxLFKewqa1qb7oJaIlU&callback=initMap"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="app.js"></script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFy093f589Vl0gwxLFKewqa1qb7oJaIlU&callback=initMap">
-    </script>
-  </body>
+</body>
 </html>
