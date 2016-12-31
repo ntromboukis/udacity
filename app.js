@@ -2,11 +2,6 @@
 var map;
 var infoWindow;
 
-$( "#map" ).on('load', function(){
-    infoWindow = new google.maps.InfoWindow({
-        content: ''
-    });
-});
 
 // Markers
 var initialMarkers = [
@@ -73,6 +68,8 @@ var ViewModel = function() {
     initialMarkers.forEach( function(markerItem) {
         self.markerList.push( new Marker(markerItem) );
     });
+
+    infoWindow = new google.maps.InfoWindow();
 
 
     this.openNav = function() {
@@ -160,10 +157,10 @@ var Marker = function(markerItem) {
         var result = data.response.venues[0];
 
         self.hereNow(result.hereNow.summary);
-        if (result.contact.formattedPhone !== null) {
-            self.phoneNumber(result.contact.formattedPhone);
-        } else {
+        if (result.contact.formattedPhone === undefined) {
             self.phoneNumber('Phone number not available');
+        } else {
+            self.phoneNumber(result.contact.formattedPhone);
         }
     }).fail(function (){
         alert("Coundn't get data");
@@ -174,7 +171,8 @@ var Marker = function(markerItem) {
                '<div>' + self.hereNow() + '</div>'+
                '<div>' + self.phoneNumber() + '</div><br>'+
                '<div><b>How to get in:</b><div>' +
-               '<div>' + self.description() + '</div>';
+               '<div>' + self.description() + '</div>'+
+               '<br><div>Powered by Foursquare</div>';
     });
 
     // this.infoWindow = new google.maps.InfoWindow({
