@@ -50,8 +50,38 @@ var ViewModel = function() {
         self.markerList.push( new Marker(markerItem) );
     });
 
-    this.openNav = resultListView.openNav();
-    this.closeNav = resultListView.closeNav();
+    this.openNav = function() {
+        document.getElementById("mySidenav").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+    };
+
+    this.closeNav = function() {
+        document.getElementById("mySidenav").style.width = "0";
+        document.getElementById("main").style.marginLeft= "0";
+        document.body.style.backgroundColor = "white";
+    };
+
+    this.query = ko.observable('');
+
+    this.filteredList = ko.computed(function() {
+        var filter = self.query().toLowerCase();
+        if (filter == null) {
+            return self.markerList();
+        } else {
+            return ko.utils.arrayFilter(self.markerList(), function(e) {
+                if(e.name().toLowerCase().indexOf(filter) >= 0) {
+                    e.selected(true);
+                    e.mapMarker.setVisible(true);
+                    return true;
+                } else {
+                    e.selected(false);
+                    e.mapMarker.setVisible(false);
+                    return false;
+                }
+            })
+        }
+    }, self);
 
 };
 
@@ -67,6 +97,7 @@ var Marker = function(markerItem) {
     this.description = ko.observable(markerItem.description);
     this.url = ko.observable('');
     this.phoneNumber = ko.observable('');
+    this.selected = ko.observable(true);
 
     this.contentString = ko.computed(function() {
         return '<div><b>' + self.name() + '</b><div>' +
@@ -107,22 +138,6 @@ var Marker = function(markerItem) {
 
 };
 
-
-var resultListView= {
-
-    openNav: function() {
-        document.getElementById("mySidenav").style.width = "250px";
-        document.getElementById("main").style.marginLeft = "250px";
-        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-    },
-
-    closeNav: function() {
-        document.getElementById("mySidenav").style.width = "0";
-        document.getElementById("main").style.marginLeft= "0";
-        document.body.style.backgroundColor = "white";
-    }
-
-}
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {

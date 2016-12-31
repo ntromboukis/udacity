@@ -33,7 +33,7 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #fff;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
@@ -60,9 +60,22 @@ body {
     margin-left: 50px;
 }
 
+.listItem {
+    color: #000;
+}
+
 #main {
     transition: margin-left .5s;
-    /*padding: 16px;*/
+}
+
+#closeBtn {
+    color: #000;
+    cursor: pointer;
+    text-align: right;
+}
+
+#openBtn {
+    cursor: pointer;
 }
 
 @media screen and (max-height: 450px) {
