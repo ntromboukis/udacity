@@ -1,22 +1,4 @@
-function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: {lat: 40.7263996, lng: -73.963972}
-    });
-}
-
-  // Attaches an info window to a marker with the provided message. When the
-  // marker is clicked, the info window will open with the secret message.
-function attachSecretMessage(marker, secretMessage) {
-    var infowindow = new google.maps.InfoWindow({
-        content: secretMessage
-    });
-
-    marker.addListener('click', function() {
-        infowindow.open(marker.get('map'), marker);
-    });
-}
-
+var map;
 
 // Markers
 var initialMarkers = [
@@ -57,9 +39,6 @@ var initialMarkers = [
     }
 ]
 
-// Make the markers show up in a list
-// Make the current marker show up when you click on it
-
 
 // ViewModel
 var ViewModel = function() {
@@ -79,13 +58,15 @@ var ViewModel = function() {
 
 // Model
 var Marker = function(markerItem) {
-    var self = this
+    var self = this;
 
-    this.name = ko.Observable(markerItem.name);
-    this.location = ko.Observable(markerItem.location);
-    this.lat = ko.Observable(markerItem.lat);
-    this.long = ko.Observable(markerItem.long);
-    this.description = ko.Observable(markerItem.description);
+    this.name = ko.observable(markerItem.name);
+    this.location = ko.observable(markerItem.location);
+    this.lat = ko.observable(markerItem.lat);
+    this.long = ko.observable(markerItem.long);
+    this.description = ko.observable(markerItem.description);
+    this.url = ko.observable('');
+    this.phoneNumber = ko.observable('');
 
     this.contentString = ko.computed(function() {
         return '<div><b>' + self.name() + '</b><div>' +
@@ -95,23 +76,34 @@ var Marker = function(markerItem) {
     })
 
     this.infowindow = new google.maps.InfoWindow({
-        content: self.contentString();
+        content: self.contentString()
     });
 
-    this.mapMarker =
-
-
-
-
-function attachSecretMessage(marker, secretMessage) {
-    var infowindow = new google.maps.InfoWindow({
-        content: secretMessage
+    this.mapMarker = new google.maps.Marker({
+        position: {
+        lat: self.lat(),
+        lng: self.long()
+        },
+        animation: google.maps.Animation.DROP,
+        map: map,
+        title: self.name()
     });
 
-    marker.addListener('click', function() {
-        infowindow.open(marker.get('map'), marker);
+    this.mapMarker.addListener('click', function() {
+        self.infoWindow.setContent(self.contentString());
+        self.infowindow.open(map, mapMarker);
+        self.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
+        setTimeout(function() {
+            self.mapMarker.setAnimation(null);
+        }, 2800);
     });
-}
+
+    this.mapMarker.setMap(map);
+
+    // Animates mapMarker when marker clicked from list
+    this.animateClick = function(markerListItem) {
+        google.maps.event.trigger(self.mapMarker, 'click');
+    };
 
 };
 
@@ -131,3 +123,16 @@ var resultListView= {
     }
 
 }
+
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: {lat: 40.735325, lng: -73.994571}
+    });
+
+    ko.applyBindings(new ViewModel());
+};
+
+function googleError() {
+    alert("Google Maps has failed to load for some reason or another. It is not your fault. Grab a beer.")
+};
