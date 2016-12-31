@@ -15,8 +15,10 @@
             </h1>
         </header>
         <div id="mySidenav" class="sidenav">
-            <span id='closeBtn' data-bind='click: closeNav'>&times;</span>
-            <input type="search" data-bind='textInput: query, valueUpdate: afterkeydown'>
+            <div id='closeBtn' data-bind='click: closeNav'>&times;</div>
+            <div class='search'>
+                <input type="search" data-bind='textInput: query, valueUpdate: afterkeydown' placeholder="Search by Name">
+            </div>
             <ul data-bind='foreach: filteredList'>
                 <li class='listItem' data-bind='text: name, click: animateClick'></li>
             </ul>

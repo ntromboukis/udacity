@@ -74,6 +74,10 @@ header {
     display: flex;
 }
 
+.search {
+    text-align: center;
+}
+
 #title {
     margin: auto;
 }
@@ -86,6 +90,8 @@ header {
     color: #000;
     cursor: pointer;
     text-align: right;
+    padding-right: 1em;
+    font-size: 2em;
 }
 
 #openBtn {

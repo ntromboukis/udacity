@@ -141,8 +141,8 @@ var Marker = function(markerItem) {
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 13,
-        center: {lat: 40.735325, lng: -73.994571}
+        zoom: 14,
+        center: {lat: 40.734065, lng: -73.993326}
     });
 
     ko.applyBindings(new ViewModel());
