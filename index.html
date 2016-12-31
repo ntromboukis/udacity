@@ -8,17 +8,19 @@
 </head>
 <body>
     <div id="main">
-        <h1 id="title">
-            Top Speakeasies in NYC
-        </h1>
+        <header>
+            <span id='openBtn' data-bind='click: openNav'>&#8801;</span>
+            <h1 id="title">
+                Top Speakeasies in NYC
+            </h1>
+        </header>
         <div id="mySidenav" class="sidenav">
             <span id='closeBtn' data-bind='click: closeNav'>&times;</span>
             <input type="search" data-bind='textInput: query, valueUpdate: afterkeydown'>
             <ul data-bind='foreach: filteredList'>
-                <li class='listItem' data-bind='text: name'></li>
+                <li class='listItem' data-bind='text: name, click: animateClick'></li>
             </ul>
         </div>
-        <span id='openBtn' data-bind='click: openNav'>&#9776;</span>
     </div>
 
     <div id="map"></div>

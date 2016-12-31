@@ -2,13 +2,13 @@
     height: 100%;
 }
 
-#title {
+/*#title {
     background: #2f3238;
     text-align: center;
     color: #fff;
     margin: 0;
     padding: .5em;
-}
+}*/
 
 .markers {
     background-color: #2f3238;
@@ -62,6 +62,20 @@ body {
 
 .listItem {
     color: #000;
+    cursor: pointer;
+}
+
+header {
+    background: #2f3238;
+    text-align: center;
+    color: #fff;
+    margin: auto;
+    padding: 1em;
+    display: flex;
+}
+
+#title {
+    margin: auto;
 }
 
 #main {
@@ -76,6 +90,9 @@ body {
 
 #openBtn {
     cursor: pointer;
+    font-size: 2em;
+    padding-left: .5em;
+    color: #fff;
 }
 
 @media screen and (max-height: 450px) {

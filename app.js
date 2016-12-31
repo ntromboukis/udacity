@@ -10,7 +10,7 @@ var initialMarkers = [
         description : 'Walk into the Stone Street coffee house and go through the door straight ahead.'
     },
     {
-        name : 'Angel&#39;s Share',
+        name : "Angel's Share",
         lat: 40.729779,
         long: -73.989161,
         location : '8 Stuyvesant St, New York, NY 10003',
@@ -149,5 +149,5 @@ function initMap() {
 };
 
 function googleError() {
-    alert("Google Maps has failed to load for some reason or another. It is not your fault. Grab a beer.")
+    alert("Google Maps has failed to load for some reason or another.")
 };
