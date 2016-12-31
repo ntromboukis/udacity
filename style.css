@@ -18,6 +18,12 @@ header {
     display: flex;
 }
 
+a {
+    text-decoration: none;
+    font-size: 2em;
+    color: #000;
+}
+
 .markers {
     background-color: #2f3238;
     padding: .2em;
@@ -38,6 +44,11 @@ header {
 
 .search {
     text-align: center;
+}
+
+.listItem {
+    list-style: none;
+    padding-top: 1em;
 }
 
 #map {

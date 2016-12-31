@@ -7,35 +7,51 @@ var initialMarkers = [
         location : '132 9th Ave, New York, NY 10011',
         lat: 40.743585,
         long: -74.003283,
-        description : 'Walk into the Stone Street coffee house and go through the door straight ahead.'
+        description :
+        'Walk into the Stone Street coffee  <br> ' +
+        'house and go through the door <br> ' +
+        ' straight ahead.'
     },
     {
         name : "Angel's Share",
         lat: 40.729779,
         long: -73.989161,
         location : '8 Stuyvesant St, New York, NY 10003',
-        description : 'Climb the stairs to Japanese restaurant Village Yokocho, and enter through the unmarked wooden door in the back left.'
+        description :
+        'Climb the stairs to Japanese restaurant <br> ' +
+        'Village Yokocho, and enter through the  <br> ' +
+        'unmarked wooden door in the back left.'
     },
     {
         name : 'The Blind Barber',
         lat: 40.727147,
         long: -73.980140,
         location : '339 E 10th St, New York, NY 10009',
-        description : 'Pass the bouncer with the eye patch then walk through the erie barber shop and through the wooden barn door. Make sure to enjoy a drink in the back library.'
+        description :
+        'Pass the bouncer with the eye patch then  <br> ' +
+        'walk through the erie barber shop and through  <br> ' +
+        'the wooden barn door. Make sure to enjoy a  <br> ' +
+        'drink in the back library.'
     },
     {
         name : 'Attaboy',
         location : '134 Eldridge St, New York, NY 10002',
         lat: 40.719118,
         long: -73.991360,
-        description : 'Knock or ring the buzzer (look for a window marked with M&H Tailors and Alterations) and pray they have space for you.'
+        description :
+        'Knock or ring the buzzer (look for a window  <br> ' +
+        'marked with M&H Tailors and Alterations) and  <br> ' +
+        'pray they have space for you.'
     },
     {
         name : 'The Back Room',
         lat: 40.718763,
         long: -73.986993,
         location : '102 Norfolk St, New York, NY 10002',
-        description : 'Descend the stairs of the “Lower East Side Toy Company,” wind through the back alley, then head back up some stairs to the entrance.'
+        description :
+        'Descend the stairs of the “Lower East Side Toy Company,” <br> ' +
+        'wind through the back alley, then head back up some <br> ' +
+        'stairs to the entrance.'
     }
 ]
 
@@ -120,14 +136,32 @@ var Marker = function(markerItem) {
     this.long = ko.observable(markerItem.long);
     this.description = ko.observable(markerItem.description);
     this.url = ko.observable('');
+    this.hereNow = ko.observable('');
     this.phoneNumber = ko.observable('');
     this.selected = ko.observable(true);
 
+    var clientID = '2JDYUEZROUCLCQUILMDN52ZPKF4CXAKF2SMWZ2YNOMZXXBJT';
+    var clientSecret = 'L1RIAHQSCAQ20R31O1RXMIZP4ZGAREDHZ33VPLFJ3IPLLCCV';
+
+    var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll='+ self.lat() +
+    ',' + self.long() + '&client_id=' + clientID + '&client_secret=' + clientSecret +
+    '&v=20160118' + '&query=' + self.name();
+
+    $.getJSON(foursquareURL, function(data) {
+        var result = data.response.venues[0];
+
+        self.hereNow(result.hereNow.summary);
+        self.phoneNumber(result.contact.formattedPhone);
+    }).fail(function (){
+        alert("Danger, Will Robinson! Danger!");
+    });
+
     this.contentString = ko.computed(function() {
-        return '<div><b>' + self.name() + '</b><div>' +
-               '<div>' + self.description() + '</div>' +
-               '<div>' + self.url() + '</div>' +
-               '<div>' + self.phoneNumber() + '</div>'
+        return '<a href="' + self.url() + '" target="_blank">'+ self.name() +'</a>' +
+               '<div>' + self.hereNow() + '</div>'+
+               '<div>' + self.phoneNumber() + '</div><br>'+
+               '<div><b>How to get in:</b><div>' +
+               '<div>' + self.description() + '</div>'
     })
 
     this.infoWindow = new google.maps.InfoWindow({
