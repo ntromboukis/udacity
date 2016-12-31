@@ -75,7 +75,7 @@ var Marker = function(markerItem) {
                '<div>' + self.phoneNumber() + '</div>'
     })
 
-    this.infowindow = new google.maps.InfoWindow({
+    this.infoWindow = new google.maps.InfoWindow({
         content: self.contentString()
     });
 
@@ -91,11 +91,11 @@ var Marker = function(markerItem) {
 
     this.mapMarker.addListener('click', function() {
         self.infoWindow.setContent(self.contentString());
-        self.infowindow.open(map, mapMarker);
+        self.infoWindow.open(map, self.mapMarker);
         self.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function() {
             self.mapMarker.setAnimation(null);
-        }, 2800);
+        }, 700);
     });
 
     this.mapMarker.setMap(map);
