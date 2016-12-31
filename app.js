@@ -208,6 +208,6 @@ function initMap() {
     ko.applyBindings(new ViewModel());
 };
 
-function googleError() {
+function googleMapsError() {
     alert("Google Maps has failed to load.")
 };
