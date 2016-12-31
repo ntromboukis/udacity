@@ -1,4 +1,12 @@
+"use strict";
 var map;
+var infoWindow;
+
+$( "#map" ).on('load', function(){
+    infoWindow = new google.maps.InfoWindow({
+        content: ''
+    });
+});
 
 // Markers
 var initialMarkers = [
@@ -53,7 +61,7 @@ var initialMarkers = [
         'wind through the back alley, then head back up some <br> ' +
         'stairs to the entrance.'
     }
-]
+];
 
 
 // ViewModel
@@ -106,7 +114,7 @@ var ViewModel = function() {
 
     this.filteredList = ko.computed(function() {
         var filter = self.query().toLowerCase();
-        if (filter == null) {
+        if (filter === null) {
             return self.markerList();
         } else {
             return ko.utils.arrayFilter(self.markerList(), function(e) {
@@ -124,7 +132,6 @@ var ViewModel = function() {
     }, self);
 
 };
-
 
 // Model
 var Marker = function(markerItem) {
@@ -147,13 +154,17 @@ var Marker = function(markerItem) {
 
     var foursquareURL = 'https://api.foursquare.com/v2/venues/search?ll='+ self.lat() +
     ',' + self.long() + '&client_id=' + clientID + '&client_secret=' + clientSecret +
-    '&v=20160118' + '&query=' + self.name();
+    '&v=20161230' + '&query=' + self.name();
 
     $.getJSON(foursquareURL, function(data) {
         var result = data.response.venues[0];
 
         self.hereNow(result.hereNow.summary);
-        self.phoneNumber(result.contact.formattedPhone);
+        if (result.contact.formattedPhone !== null) {
+            self.phoneNumber(result.contact.formattedPhone);
+        } else {
+            self.phoneNumber('Phone number not available');
+        }
     }).fail(function (){
         alert("Coundn't get data");
     });
@@ -163,12 +174,12 @@ var Marker = function(markerItem) {
                '<div>' + self.hereNow() + '</div>'+
                '<div>' + self.phoneNumber() + '</div><br>'+
                '<div><b>How to get in:</b><div>' +
-               '<div>' + self.description() + '</div>'
-    })
-
-    this.infoWindow = new google.maps.InfoWindow({
-        content: self.contentString()
+               '<div>' + self.description() + '</div>';
     });
+
+    // this.infoWindow = new google.maps.InfoWindow({
+    //     content: self.contentString()
+    // });
 
     this.mapMarker = new google.maps.Marker({
         position: {
@@ -181,8 +192,10 @@ var Marker = function(markerItem) {
     });
 
     this.mapMarker.addListener('click', function() {
-        self.infoWindow.setContent(self.contentString());
-        self.infoWindow.open(map, self.mapMarker);
+        infoWindow.setContent(self.contentString());
+        infoWindow.open(map, self.mapMarker);
+        // self.infoWindow.setContent(self.contentString());
+        // self.infoWindow.open(map, self.mapMarker);
         self.mapMarker.setAnimation(google.maps.Animation.BOUNCE);
         setTimeout(function() {
             self.mapMarker.setAnimation(null);
@@ -192,7 +205,7 @@ var Marker = function(markerItem) {
     this.mapMarker.setMap(map);
 
     // Animates mapMarker when marker clicked from list
-    this.animateClick = function(markerListItem) {
+    this.animateClick = function() {
         google.maps.event.trigger(self.mapMarker, 'click');
     };
 
@@ -209,5 +222,5 @@ function initMap() {
 };
 
 function googleMapsError() {
-    alert("Google Maps has failed to load.")
-};
+    alert("Google Maps has failed to load.");
+}
