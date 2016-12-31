@@ -140,6 +140,8 @@ var Marker = function(markerItem) {
     this.phoneNumber = ko.observable('');
     this.selected = ko.observable(true);
 
+    // Using Foursquare API
+    // https://developer.foursquare.com/docs/venues/search
     var clientID = '2JDYUEZROUCLCQUILMDN52ZPKF4CXAKF2SMWZ2YNOMZXXBJT';
     var clientSecret = 'L1RIAHQSCAQ20R31O1RXMIZP4ZGAREDHZ33VPLFJ3IPLLCCV';
 
@@ -153,7 +155,7 @@ var Marker = function(markerItem) {
         self.hereNow(result.hereNow.summary);
         self.phoneNumber(result.contact.formattedPhone);
     }).fail(function (){
-        alert("Danger, Will Robinson! Danger!");
+        alert("Coundn't get data");
     });
 
     this.contentString = ko.computed(function() {
@@ -207,5 +209,5 @@ function initMap() {
 };
 
 function googleError() {
-    alert("Google Maps has failed to load for some reason or another.")
+    alert("Google Maps has failed to load.")
 };
