@@ -1,20 +1,3 @@
-#map {
-    height: 100%;
-}
-
-/*#title {
-    background: #2f3238;
-    text-align: center;
-    color: #fff;
-    margin: 0;
-    padding: .5em;
-}*/
-
-.markers {
-    background-color: #2f3238;
-    padding: .2em;
-}
-
 html, body {
   height: 100%;
   margin: 0;
@@ -24,6 +7,20 @@ html, body {
 body {
     font-family: "Lato", sans-serif;
     transition: background-color .5s;
+}
+
+header {
+    background: #2f3238;
+    text-align: center;
+    color: #fff;
+    margin: auto;
+    padding: 1em;
+    display: flex;
+}
+
+.markers {
+    background-color: #2f3238;
+    padding: .2em;
 }
 
 .sidenav {
@@ -39,43 +36,12 @@ body {
     padding-top: 60px;
 }
 
-.sidenav a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-    transition: 0.3s
-}
-
-.sidenav a:hover, .offcanvas a:focus{
-    color: #f1f1f1;
-}
-
-.sidenav .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-}
-
-.listItem {
-    color: #000;
-    cursor: pointer;
-}
-
-header {
-    background: #2f3238;
-    text-align: center;
-    color: #fff;
-    margin: auto;
-    padding: 1em;
-    display: flex;
-}
-
 .search {
     text-align: center;
+}
+
+#map {
+    height: 100%;
 }
 
 #title {
@@ -86,19 +52,11 @@ header {
     transition: margin-left .5s;
 }
 
-#closeBtn {
-    color: #000;
+#toggleNavBtn {
+    color: #fff;
     cursor: pointer;
-    text-align: right;
     padding-right: 1em;
     font-size: 2em;
-}
-
-#openBtn {
-    cursor: pointer;
-    font-size: 2em;
-    padding-left: .5em;
-    color: #fff;
 }
 
 @media screen and (max-height: 450px) {

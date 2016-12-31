@@ -4,18 +4,17 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Top Speakeasies in NYC</title>
+    <title>Top 5 Speakeasies in NYC</title>
 </head>
 <body>
     <div id="main">
         <header>
-            <span id='openBtn' data-bind='click: openNav'>&#8801;</span>
+            <span id='toggleNavBtn' data-bind='html: toggleNav, click: toggleNav'></span>
             <h1 id="title">
-                Top Speakeasies in NYC
+                Top 5 Speakeasies in NYC
             </h1>
         </header>
         <div id="mySidenav" class="sidenav">
-            <div id='closeBtn' data-bind='click: closeNav'>&times;</div>
             <div class='search'>
                 <input type="search" data-bind='textInput: query, valueUpdate: afterkeydown' placeholder="Search by Name">
             </div>

@@ -50,6 +50,7 @@ var ViewModel = function() {
         self.markerList.push( new Marker(markerItem) );
     });
 
+
     this.openNav = function() {
         document.getElementById("mySidenav").style.width = "250px";
         document.getElementById("main").style.marginLeft = "250px";
@@ -61,6 +62,29 @@ var ViewModel = function() {
         document.getElementById("main").style.marginLeft= "0";
         document.body.style.backgroundColor = "white";
     };
+
+    this.navState = ko.observable(true);
+    this.navBtn = ko.observable('&#8801;');
+
+    this.toggleNav = ko.pureComputed({
+        read: function () {
+            return self.navBtn();
+        },
+        write: function () {
+            if (self.navState() === true) {
+                self.navBtn('&times;');
+                self.openNav();
+                self.navState(false);
+                return self.navBtn;
+            } else {
+                self.navBtn('&#8801;');
+                self.closeNav();
+                self.navState(true);
+                return self.navBtn;
+            }
+        },
+        owner: self
+    });
 
     this.query = ko.observable('');
 
