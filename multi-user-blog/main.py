@@ -2,8 +2,6 @@
 
 import webapp2
 from handlers import *
-from validate import *
-
 
 
 app = webapp2.WSGIApplication([
