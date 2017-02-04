@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Rot13 Encryption</h1>
+<form method="post">
+	<textarea name="text" rows="20" cols="50" placeholder="Convert some text!">{{converted}}</textarea>
+	<br>
+	<br>
+	<input type="submit">
+</form>
+
+{% endblock %}
+

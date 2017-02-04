@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if status == "Like" %}
+
+<div id="likes">
+    <h2 class="blog-title">{{post.subject}}</h2>
+    <pre class="blog-post">{{post.content}}</pre>
+    <div id="like_box">
+        <span>Likes:{{post.likes}}</span>
+        <form method="post">
+                <label>
+                    <input type="checkbox" name="like_checkbox">
+                    {% if liked == "no" %}
+                        <input type="submit" value="Like">
+                    {% elif liked == "yes" %}
+                        <input type="submit" value="Unlike">
+                    {% endif %}
+                </label>
+        </form>
+    </div>
+</div>
+
+{% else %}
+
+<h2 class="blog-title">{{post.subject}}</h2>
+<pre class="blog-post">{{post.content}}</pre>
+<span>Likes:{{post.likes}}</span>
+
+{% endif %}
+
+{% if can_edit == "yes" %}
+
+    <a href="{{edit_link}}">Edit</a>
+
+{% endif %}
+
+{% if comments %}
+    <h2>Comments</h2>
+    <ul style="list-style:None">
+    {% for comment in comments %}
+        <li>{{comment.comment}}</li>
+        <li>By:{{comment.username.username}}</li>
+         {% if comment.username.username == username %}
+            <a href="/blog/edit/comment/{{comment.key().id()}}">Edit</a>
+         {% endif %}
+        <hr>
+    {% endfor %}
+    </ul>
+
+{% endif %}
+
+
+
+
+
+{% if can_comment == "yes" %}
+
+    <form id="postComment" method="post">
+         <label>
+                <div>Comment</div>
+                <textarea name="postComment" placeholder="Insert comment here!"></textarea>
+                <input type="submit" value="Comment">
+            </label>
+    </form>
+
+{% else %}
+    <span>Sign In to comment!</span>
+{% endif %}
+
+
+
+
+
+
+
+{% endblock %}

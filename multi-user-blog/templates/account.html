@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Account info</h3>
+
+{% for info in user %}
+<div class="blog-title">{{info.username}}</div>
+<pre class="blog-post">{{info.hashed_password}}</pre>
+<hr>
+{% endfor %}
+
+{% endblock %}

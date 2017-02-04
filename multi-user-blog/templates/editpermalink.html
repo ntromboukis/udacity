@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if can_edit == "yes" %}
+
+<div id="edit">
+    <form method="post">
+        <label>
+            <div>Subject</div>
+            <input type="text" name="subject" value="{{post.subject}}">
+        </label>
+        <label>
+            <div>Content</div>
+            <textarea name="content">{{post.content}}</textarea>
+        </label>
+        <div class="error">{{error}}</div>
+        <span>Convert to Rot13</span>
+        <input type="checkbox" name="rot13_checkbox">
+        <input type="submit">
+        </label>
+    </form>
+    <span>Likes:{{post.likes}}</span>
+</div>
+
+<div id="delete">
+    <form method="post">
+        <label>Delete Post</label>
+        <input type="checkbox" name="delete_checkbox">
+        <input type="submit" value="Delete">
+    </form>
+</div>
+
+<a href="/blog">Cancel</a>
+
+{% else %}
+
+<h2 class="blog-title">{{post.subject}}</h2>
+<pre class="blog-post">{{post.content}}</pre>
+<span>Likes:{{post.likes}}</span>
+<p>You can't edit this post</p>
+
+{% endif %}
+
+{% endblock %}

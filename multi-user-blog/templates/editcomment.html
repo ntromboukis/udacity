@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if can_edit == "yes" %}
+
+<div id="edit">
+    <form method="post">
+        <label>
+            <div>Comment</div>
+            <textarea name="comment">{{comment}}</textarea>
+        </label>
+        <div class="error">{{error}}</div>
+        <input type="submit">
+        </label>
+    </form>
+</div>
+
+<div id="delete">
+    <form method="post">
+        <label>Delete Comment</label>
+        <input type="checkbox" name="delete_checkbox">
+        <input type="submit" value="Delete">
+    </form>
+</div>
+
+<a href="/blog">Cancel</a>
+
+{% else %}
+
+<p>You can't edit this comment</p>
+
+{% endif %}
+
+{% endblock %}
