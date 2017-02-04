@@ -1,0 +1,5 @@
+.DS_store
+conference.pyc
+models.pyc
+settings.pyc
+utils.pyc
