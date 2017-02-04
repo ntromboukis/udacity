@@ -1,0 +1,119 @@
+<div class="row top-menu">
+	<div class="col-md-12">
+		<div class="col-md-3 left">
+			<a href="{{url_for('showStores')}}"class="home">
+				<span class="glyphicon glyphicon-home" aria-hidden="true"></span>Nick's Shops
+			</a>
+		</div>
+
+		{%if 'username' not in session %}
+		<div class="right">
+
+		<button type="button" class="btn btn-info btn-lg" id="myBtn">Login</button>
+
+  <!-- Modal -->
+	  <div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog">
+
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">Sign in with Google</h4>
+	        </div>
+	        <div class="modal-body">
+	          <div id="signInButton">
+							<span class="g-signin"
+							data-scope="openid email"
+							data-clientid="620284591007-sqhtk46f3h4eae6ns1ev10hb619qsctf.apps.googleusercontent.com"
+							data-redirecturi="postmessage"
+							data-accesstype="offline"
+							data-cookiepolicy="single_host_origin"
+							data-callback="signInCallback"
+							data-approvalprompt="force">
+						</span>
+					</div>
+
+					<div id="result"></div>
+
+
+					<script>
+					console.log("testing");
+						function signInCallback(authResult) {
+							console.log("testing2");
+							if(authResult['code']) {
+							$('#signinButton').attr('style', 'display: none');
+							//Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+							console.log("button gone")
+							$.ajax({
+								type: 'POST',
+								url: '/gconnect?state={{STATE}}',
+								processData: false,
+								data: authResult['code'],
+								contentType: 'application/c=octet-stream: charset=utf-8',
+								success:
+								function(result) {
+									console.log("in success")
+									if(result) {
+										$('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+										setTimeout(function() {
+											window.location.href="/";
+										}, 4000);
+									} else if (authResult['error']) {
+										console.log('There was an error: ' + authResult['error']);
+									} else {
+										$('#result').html('Failed to make a server side call. Check your configuration and console');
+									}
+								}
+							})
+						}
+					}
+				  </script>
+				        </div>
+				        <div class="modal-footer">
+				          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				        </div>
+				      </div>
+
+				    </div>
+				  </div>
+
+				</div>
+
+				<script>
+				$(document).ready(function(){
+				    $("#myBtn").click(function(){
+				        $("#myModal").modal();
+				    });
+				});
+				</script>
+			<!-- <a href="{{url_for('showLogin')}}"class="btn-default">Login</a> -->
+			</div>
+		</div>
+
+		{% else %}
+		<div class="col-md-4 right">
+			<a href="{{url_for('newStore')}}">
+				<button class="btn btn-default add" id="new-store">
+					<span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>Add store
+				</button>
+			</a>
+			<a href="{{url_for('disconnect')}}"class="btn-default">Log Out</a>
+		</div>
+	</div>
+		{% endif %}
+</div>
+
+<hr>
+<nav>
+	<a href="{{url_for('categorizedStore', store_category = 'sporting')}}" class="nav-links">Sporting Goods</a>
+	<a href="{{url_for('categorizedStore', store_category = 'shoes')}}"class="nav-links">Shoes</a>
+	<a href="{{url_for('categorizedStore', store_category = 'clothing')}}"class="nav-links">Clothing</a>
+</nav>
+
+
+
+
+
+
+
