@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="images/martini-favicon.png"/>
+    <title>Top 5 Speakeasies in NYC</title>
+</head>
+<body>
+    <div id="main">
+        <header>
+            <span id='toggle-Nav-Btn' data-bind='html: toggleNav, click: toggleNav'></span>
+            <h1 id="title">
+                Top 5 Speakeasies in NYC
+            </h1>
+        </header>
+        <div id="mySidenav" class="sidenav">
+            <div class='search'>
+                <input type="search" data-bind='textInput: query, valueUpdate: afterkeydown' placeholder="Search by Name">
+            </div>
+            <ul data-bind='foreach: filteredList'>
+                <li class='listItem' data-bind='text: name, click: animateClick'></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="map"></div>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/knockout/dist/knockout.js"></script>
+    <script src="app.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFy093f589Vl0gwxLFKewqa1qb7oJaIlU&callback=initMap" onerror="googleMapsError()"></script>
+</body>
+</html>

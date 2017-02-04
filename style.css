@@ -1,0 +1,80 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    font-family: "Lato", sans-serif;
+    transition: background-color .5s;
+}
+
+header {
+    background: #2f3238;
+    text-align: center;
+    color: #fff;
+    margin: auto;
+    padding: 1em;
+    display: flex;
+}
+
+a {
+    text-decoration: none;
+    font-size: 2em;
+    color: #000;
+}
+
+.markers {
+    background-color: #2f3238;
+    padding: .2em;
+}
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    cursor: pointer;
+}
+
+.search {
+    text-align: center;
+}
+
+.listItem {
+    list-style: none;
+    padding-top: 1em;
+}
+
+#map {
+    /*height: 100%;*/
+    height: calc(100% - 72px);
+}
+
+#title {
+    margin: auto;
+    font-family: 'Raleway', sans-serif;
+}
+
+#main {
+    transition: margin-left .5s;
+}
+
+#toggle-Nav-Btn {
+    color: #fff;
+    cursor: pointer;
+    padding-right: 1em;
+    font-size: 2em;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
