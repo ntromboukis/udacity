@@ -11,7 +11,7 @@ hosted URL          : http://ec2-35-165-209-51.us-west-2.compute.amazonaws.com/
 
 ##1. Created new user grader##
 
-```sudo newuser grader```
+```sudo adduser grader```
 
 
 ##2. Granted sudo privileges##
@@ -26,12 +26,12 @@ Pasted into grader
 
 ##3. Updated installed packages##
 
-```sudo apt-get install update```
+```sudo apt-get update```
 
 
 ##4. Upgraded install packages##
 
-```sudo apt-get install upgrade```
+```sudo apt-get upgrade```
 
 
 ##5. Changed SSH port and Configured SSH access##
