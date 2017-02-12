@@ -56,14 +56,19 @@ Restarted SSH
 References: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894770923#), [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
 
 On local machine
-
-```ssh-keygen```
+```
+ssh-keygen
+```
 
 Set keys
-```ssh-copy-id grader@35.165.209.51 -p 2200```
+```
+ssh-copy-id grader@35.165.209.51 -p 2200
+```
 
 Logged in with new user
-```ssh grader@35.165.209.51 -p 2200```
+```
+ssh grader@35.165.209.51 -p 2200
+```
 
 
 ##7. Configured UFW
