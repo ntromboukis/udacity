@@ -11,62 +11,77 @@ hosted URL          : http://ec2-35-165-209-51.us-west-2.compute.amazonaws.com/
 
 ##1. Created new user grader
 
-```sudo adduser grader```
+```bash
+sudo adduser grader
+```
 
 
 ##2. Granted sudo privileges
 Reference: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894710923#)
 
 Created
-```sudo nano /etc/sudoers.d/grader```
+```bash
+sudo nano /etc/sudoers.d/grader
+```
 
 Pasted into grader
-```grader ALL=(ALL) NOPASSWD:ALL```
+```bash
+grader ALL=(ALL) NOPASSWD:ALL
+```
 
 
 ##3. Updated installed packages
 
-```sudo apt-get update```
+```bash
+sudo apt-get update
+```
 
 
 ##4. Upgraded install packages
 
-```sudo apt-get upgrade```
+```bash
+sudo apt-get upgrade
+```
 
 
 ##5. Changed SSH port and Configured SSH access
 
 ####Opened config file
-```sudo nano /etc/ssh/sshd_config```
+```bash
+sudo nano /etc/ssh/sshd_config
+```
 
 ####Edited file
 Changed
 ```Port``` to 2200
 ```PermitRootLogin``` to ```no```
 
-Appended ```AllowedUsers grader```
+Appended
+```AllowedUsers grader```
 
 Write out file
 
 Restarted SSH
-```sudo service sshd restart```
+```bash
+sudo service sshd restart
+```
 
 
 ##6. Created SSH keys
 References: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894770923#), [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
 
 On local machine
-```
+```bash
 ssh-keygen
 ```
 
 Set keys
-```
+```bash
 ssh-copy-id grader@35.165.209.51 -p 2200
 ```
 
 Logged in with new user
-```
+```bash
 ssh grader@35.165.209.51 -p 2200
 ```
 
@@ -75,96 +90,157 @@ ssh grader@35.165.209.51 -p 2200
 Reference: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894990923#)
 
 Denied all incoming traffic
-```sudo ufw default deny incoming```
+```bash
+sudo ufw default deny incoming
+```
 
 Allowed all outgoing traffic
-```sudo ufw default allow outgoing```
+```bash
+sudo ufw default allow outgoing
+```
 
 Allowed incoming traffic
-```sudo ufw allow 2200/tcp```
-```sudo ufw allow 80/tcp```
-```sudo ufw allow 123/tcp```
+```bash
+sudo ufw allow 2200/tcp
+```
+
+```bash
+sudo ufw allow 80/tcp
+```
+
+```bash
+sudo ufw allow 123/tcp
+```
 
 Enabled UFW
-```sudo ufw enable```
+```bash
+sudo ufw enable
+```
 
 
 ##8. Installed Fail2ban
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu-14-04)
 
-```sudo apt-get install fail2ban```
+```bash
+sudo apt-get install fail2ban
+```
 
 Copied config file
-```sudo cp /etc/fail2ban/jail.conf /etc/fail2banjail.local```
+```bash
+sudo cp /etc/fail2ban/jail.conf /etc/fail2banjail.local
+```
 
 Opened local cofig file
-```sudo nano /etc/fail2banjail.local```
+```bash
+sudo nano /etc/fail2banjail.local
+```
 
 Updated preferences
-```bantime = 1800```
-```ssh port = 2200```
+```bash
+bantime = 1800
+```
+
+```bash
+ssh port = 2200
+```
 
 
 ##9. Installed and configured dev stack
 Reference: [Udacity](http://blog.udacity.com/2015/03/step-by-step-guide-install-lamp-linux-apache-mysql-python-ubuntu.html)
 
 ####Installed Apache
-```sudo apt-get install apache2```
+```bash
+sudo apt-get install apache2
+```
 Opened browser and navigated to public ip address
 
 ####Installed mod_wsgi for serving Python apps from Apache and helper package python-setuptools
-```sudo apt-get install python-setuptools libapache2-mod-wsgi```
+```bash
+sudo apt-get install python-setuptools libapache2-mod-wsgi
+```
 
 Restarted Apache server
-```sudo service apache2 restart```
+```bash
+sudo service apache2 restart
+```
 
 ####Installed PostgreSQL
-```sudo apt-get install postgresql```
+```bash
+sudo apt-get install postgresql
+```
 
 
 ##10. Installed and configured git
 
 Installed git
-```sudo apt-get install git```
+```bash
+sudo apt-get install git
+```
 
 Setup name and email for commits
-```git config --global user.name "YOUR NAME"```
-```git config --global user.email "YOUR EMAIL ADDRESS"```
+```bash
+git config --global user.name "YOUR NAME"
+```
+
+```bash
+git config --global user.email "YOUR EMAIL ADDRESS"
+```
 
 
 ##11. Setup for delpoying app
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 
 Changed to www directory
-```cd /var/www```
+```bash
+cd /var/www
+```
 
 Setup app directory
-```sudo mkdir catalog```
-```cd catalog```
+```bash
+sudo mkdir catalog
+```
+
+```bash
+cd catalog
+```
 
 Installed Pip
-```sudo apt-get install python-pip```
+```bash
+sudo apt-get install python-pip
+```
 
 Installed virtualenv
-```sudo pip install virtualenv```
+```bash
+sudo pip install virtualenv
+```
 
 Set virtual environment to name 'venv'
-```sudo virtualenv venv```
+```bash
+sudo virtualenv venv
+```
 
 Enabled permissions for venv
-```sudo chmod -R 777 venv```
+```bash
+sudo chmod -R 777 venv
+```
 
 Activated virtual environment
-```source venv/bin/activate```
+```bash
+source venv/bin/activate
+```
 
 Installed Flask inside venv
-```pip install Flask```
+```bash
+pip install Flask
+```
 
 Deactivated venv
-```deactivate```
+```bash
+deactivate
+```
 
 Created new virtual host
-```
+```bash
 sudo nano /etc/apache2/sites-available/catalog.conf
 ```
 
@@ -191,18 +267,18 @@ Pasted the following lines (used names and addresses for my app)
 ```
 
 Enabled virtual host
-```
+```bash
 sudo a2ensite catalog
 ```
 
 Created wsgi file
-```
+```bash
 sudo nano /var/www/catalog/catalog.wsgi
 ```
 
 Pasted the following lines
 
-```
+```bash
 import sys
 import logging
 logging.basicConfig(stream=sys.stderr)
@@ -213,81 +289,125 @@ application.secret_key = 'Add your secret key'
 ```
 
 Restarted Apache
-```
+
+```bash
 sudo service apache2 restart
 ```
 
 ##Setup Application
 
 Changed dir to catalog
-```cd /var/www/catalog```
+```bash
+cd /var/www/catalog
+```
 
 Cloned git repository
-```git clone https://github.com/ntromboukis/item-catalog.git```
+```bash
+git clone https://github.com/ntromboukis/item-catalog.git
+```
 
 Moved contents to catalog dir
-```mkdir catalog```
-```mv item-catalog catalog```
+```bash
+mkdir catalog
+```
+
+```bash
+mv item-catalog catalog
+```
 
 ####Installed modules and packages
 
 Activate venv
-```source venv/bin/activate```
+```bash
+source venv/bin/activate
+```
 
 Installed httplib2
-```pip install httplib2```
+```bash
+pip install httplib2
+```
 
 Installed requests
-```pip install requests```
+```bash
+pip install requests
+```
 
 Installed oauth2client
+```bash
 sudo pip install --upgrade oauth2client
+```
 
 Installed SQLAlchemy
-```sudo pip install sqlalchemy```
+```bash
+sudo pip install sqlalchemy
+```
 
 Install the Python PostgreSQL adapter psycopg
-```sudo apt-get install python-psycopg2```
+```bash
+sudo apt-get install python-psycopg2
+```
 
 ##Configure PostgreSQL
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps)
 
 Opened the database setup file
-```sudo nano database_setup.py```
+```bash
+sudo nano database_setup.py
+```
 
 Changed the line starting with "engine" to (fill in a password):
 ```engine = create_engine('postgresql://catalog:PW-FOR-DB@localhost/catalog')```
 Changed the same line in project.py
 
 Renamed project.py:
-```mv project.py __init__.py```
+```bash
+mv project.py __init__.py
+```
 
 Created user for psql
-```sudo adduser catalog```
+```bash
+sudo adduser catalog
+```
 
 Changed to default user postgres
-```sudo su - postgres```
+```bash
+sudo su - postgres
+```
 
 Connected to the system
-```psql```
+```bash
+psql
+```
 
 Created User
-```CREATE USER catalog WITH PASSWORD 'PW-FOR-DB';```
+```bash
+CREATE USER catalog WITH PASSWORD 'PW-FOR-DB';
+```
 
 Allowed user to create database tables
-```ALTER USER catalog CREATEDB;```
+```bash
+ALTER USER catalog CREATEDB;
+```
 
-Created databas
-```CREATE DATABASE catalog WITH OWNER catalog;```
+Created database
+```bash
+CREATE DATABASE catalog WITH OWNER catalog;
+```
 
 Connected to database
-``` \c catalog```
+```bash
+\c catalog
+```
 
 Revoked all rights
-```REVOKE ALL ON SCHEMA public FROM public;```
+```bash
+REVOKE ALL ON SCHEMA public FROM public;
+```
 
 Granted only access to the catalog role
-```GRANT ALL ON SCHEMA public TO catalog;```
+```bash
+GRANT ALL ON SCHEMA public TO catalog;
+```
 
 ##Done
 Restarted Apache and opened page in browser
