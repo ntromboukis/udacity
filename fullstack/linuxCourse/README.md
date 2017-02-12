@@ -164,9 +164,12 @@ Deactivated venv
 ```deactivate```
 
 Created new virtual host
-```sudo nano /etc/apache2/sites-available/catalog.conf```
+```
+sudo nano /etc/apache2/sites-available/catalog.conf
+```
 
 Pasted the following lines (used names and addresses for my app)
+
 ```
    <VirtualHost *:80>
       ServerName 35.165.209.51
@@ -188,12 +191,17 @@ Pasted the following lines (used names and addresses for my app)
 ```
 
 Enabled virtual host
-```sudo a2ensite catalog```
+```
+sudo a2ensite catalog
+```
 
 Created wsgi file
-```sudo nano /var/www/catalog/catalog.wsgi```
+```
+sudo nano /var/www/catalog/catalog.wsgi
+```
 
 Pasted the following lines
+
 ```
 import sys
 import logging
@@ -205,7 +213,9 @@ application.secret_key = 'Add your secret key'
 ```
 
 Restarted Apache
-```sudo service apache2 restart```
+```
+sudo service apache2 restart
+```
 
 ##Setup Application
 
