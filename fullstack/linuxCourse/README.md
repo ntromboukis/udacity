@@ -170,7 +170,7 @@ sudo nano /etc/apache2/sites-available/catalog.conf
 
 Pasted the following lines (used names and addresses for my app)
 
-```
+```apache
    <VirtualHost *:80>
       ServerName 35.165.209.51
       ServerAdmin admin@35.165.209.51
