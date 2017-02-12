@@ -1,7 +1,9 @@
 #Linux Configuration Course
 
 public ip address   : 35.165.209.51
+
 ssh port            : 2200
+
 hosted URL          : http://ec2-35-165-209-51.us-west-2.compute.amazonaws.com/
 
 
