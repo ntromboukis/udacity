@@ -1,20 +1,20 @@
-#Linux Configuration Course#
+#Linux Configuration Course
 
 public ip address   : 35.165.209.51
 ssh port            : 2200
 hosted URL          : http://ec2-35-165-209-51.us-west-2.compute.amazonaws.com/
 
 
-##Software installed and Configuration Changes##
+##Software installed and Configuration Changes
 
-####Created New User and granted sudo####
+####Created New User and granted sudo
 
-##1. Created new user grader##
+##1. Created new user grader
 
 ```sudo adduser grader```
 
 
-##2. Granted sudo privileges##
+##2. Granted sudo privileges
 Reference: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894710923#)
 
 Created
@@ -24,22 +24,22 @@ Pasted into grader
 ```grader ALL=(ALL) NOPASSWD:ALL```
 
 
-##3. Updated installed packages##
+##3. Updated installed packages
 
 ```sudo apt-get update```
 
 
-##4. Upgraded install packages##
+##4. Upgraded install packages
 
 ```sudo apt-get upgrade```
 
 
-##5. Changed SSH port and Configured SSH access##
+##5. Changed SSH port and Configured SSH access
 
-####Opened config file####
+####Opened config file
 ```sudo nano /etc/ssh/sshd_config```
 
-####Edited file####
+####Edited file
 Changed
 ```Port``` to 2200
 ```PermitRootLogin``` to ```no```
@@ -52,7 +52,7 @@ Restarted SSH
 ```sudo service sshd restart```
 
 
-##6. Created SSH keys##
+##6. Created SSH keys
 References: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894770923#), [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
 
 On local machine
