@@ -65,7 +65,7 @@ Logged in with new user
 ```ssh grader@35.165.209.51 -p 2200```
 
 
-##7. Configured UFW##
+##7. Configured UFW
 Reference: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894990923#)
 
 Denied all incoming traffic
@@ -83,7 +83,7 @@ Enabled UFW
 ```sudo ufw enable```
 
 
-##8. Installed Fail2ban##
+##8. Installed Fail2ban
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu-14-04)
 
 ```sudo apt-get install fail2ban```
@@ -99,24 +99,24 @@ Updated preferences
 ```ssh port = 2200```
 
 
-##9. Installed and configured dev stack##
+##9. Installed and configured dev stack
 Reference: [Udacity](http://blog.udacity.com/2015/03/step-by-step-guide-install-lamp-linux-apache-mysql-python-ubuntu.html)
 
-####Installed Apache####
+####Installed Apache
 ```sudo apt-get install apache2```
 Opened browser and navigated to public ip address
 
-####Installed mod_wsgi for serving Python apps from Apache and helper package python-setuptools####
+####Installed mod_wsgi for serving Python apps from Apache and helper package python-setuptools
 ```sudo apt-get install python-setuptools libapache2-mod-wsgi```
 
 Restarted Apache server
 ```sudo service apache2 restart```
 
-####Installed PostgreSQL####
+####Installed PostgreSQL
 ```sudo apt-get install postgresql```
 
 
-##10. Installed and configured git##
+##10. Installed and configured git
 
 Installed git
 ```sudo apt-get install git```
@@ -126,7 +126,7 @@ Setup name and email for commits
 ```git config --global user.email "YOUR EMAIL ADDRESS"```
 
 
-##11. Setup for delpoying app##
+##11. Setup for delpoying app
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 
 Changed to www directory
@@ -201,7 +201,7 @@ application.secret_key = 'Add your secret key'
 Restarted Apache
 ```sudo service apache2 restart```
 
-##Setup Application##
+##Setup Application
 
 Changed dir to catalog
 ```cd /var/www/catalog```
@@ -213,7 +213,7 @@ Moved contents to catalog dir
 ```mkdir catalog```
 ```mv item-catalog catalog```
 
-####Installed modules and packages####
+####Installed modules and packages
 
 Activate venv
 ```source venv/bin/activate```
@@ -233,7 +233,7 @@ Installed SQLAlchemy
 Install the Python PostgreSQL adapter psycopg
 ```sudo apt-get install python-psycopg2```
 
-##Configure PostgreSQL##
+##Configure PostgreSQL
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps)
 
 Opened the database setup file
@@ -273,5 +273,5 @@ Revoked all rights
 Granted only access to the catalog role
 ```GRANT ALL ON SCHEMA public TO catalog;```
 
-##Done##
+##Done
 Restarted Apache and opened page in browser
