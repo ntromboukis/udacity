@@ -7,7 +7,7 @@ Contains the following projects:
 - Multi User Blog [live](https://www.hiimnick.com/)
 - Item Catelog [live](https://www.hiimnick.com/)
 - Swiss Tournament DB
-- Neighborhood Map [live](https://www.hiimnick.com/speakeasies)
+- Neighborhood Map [live](https://www.hiimnick.com/)
 - Conference Planner [live](https://www.hiimnick.com/)
 - Setting up a Linux Server
 
