@@ -1,4 +1,4 @@
-#Linux Configuration Course
+# Linux Configuration Course
 
 public ip address   : 35.165.209.51
 
@@ -7,18 +7,18 @@ ssh port            : 2200
 hosted URL          : http://ec2-35-165-209-51.us-west-2.compute.amazonaws.com/
 
 
-##Software installed and Configuration Changes
+## Software installed and Configuration Changes
 
-####Created New User and granted sudo
+#### Created New User and granted sudo
 
-##1. Created new user grader
+## 1. Created new user grader
 
 ```bash
 sudo adduser grader
 ```
 
 
-##2. Granted sudo privileges
+## 2. Granted sudo privileges
 Reference: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894710923#)
 
 Created
@@ -32,28 +32,28 @@ grader ALL=(ALL) NOPASSWD:ALL
 ```
 
 
-##3. Updated installed packages
+## 3. Updated installed packages
 
 ```bash
 sudo apt-get update
 ```
 
 
-##4. Upgraded install packages
+## 4. Upgraded install packages
 
 ```bash
 sudo apt-get upgrade
 ```
 
 
-##5. Changed SSH port and Configured SSH access
+## 5. Changed SSH port and Configured SSH access
 
-####Opened config file
+#### Opened config file
 ```bash
 sudo nano /etc/ssh/sshd_config
 ```
 
-####Edited file
+#### Edited file
 Changed
 ```Port``` to 2200
 ```PermitRootLogin``` to ```no```
@@ -69,7 +69,7 @@ sudo service sshd restart
 ```
 
 
-##6. Created SSH keys
+## 6. Created SSH keys
 References: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894770923#), [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-configure-ssh-key-based-authentication-on-a-linux-server)
 
 On local machine
@@ -88,7 +88,7 @@ ssh grader@35.165.209.51 -p 2200
 ```
 
 
-##7. Configured UFW
+## 7. Configured UFW
 Reference: [Udacity](https://classroom.udacity.com/nanodegrees/nd004/parts/00413454014/modules/357367901175461/lessons/4331066009/concepts/48010894990923#)
 
 Denied all incoming traffic
@@ -120,7 +120,7 @@ sudo ufw enable
 ```
 
 
-##8. Installed Fail2ban
+## 8. Installed Fail2ban
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu-14-04)
 
 ```bash
@@ -147,16 +147,16 @@ ssh port = 2200
 ```
 
 
-##9. Installed and configured dev stack
+## 9. Installed and configured dev stack
 Reference: [Udacity](http://blog.udacity.com/2015/03/step-by-step-guide-install-lamp-linux-apache-mysql-python-ubuntu.html)
 
-####Installed Apache
+#### Installed Apache
 ```bash
 sudo apt-get install apache2
 ```
 Opened browser and navigated to public ip address
 
-####Installed mod_wsgi for serving Python apps from Apache and helper package python-setuptools
+#### Installed mod_wsgi for serving Python apps from Apache and helper package python-setuptools
 ```bash
 sudo apt-get install python-setuptools libapache2-mod-wsgi
 ```
@@ -166,13 +166,13 @@ Restarted Apache server
 sudo service apache2 restart
 ```
 
-####Installed PostgreSQL
+#### Installed PostgreSQL
 ```bash
 sudo apt-get install postgresql
 ```
 
 
-##10. Installed and configured git
+## 10. Installed and configured git
 
 Installed git
 ```bash
@@ -189,7 +189,7 @@ git config --global user.email "YOUR EMAIL ADDRESS"
 ```
 
 
-##11. Setup for delpoying app
+## 11. Setup for delpoying app
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 
 Changed to www directory
@@ -296,7 +296,7 @@ Restarted Apache
 sudo service apache2 restart
 ```
 
-##Setup Application
+## Setup Application
 
 Changed dir to catalog
 ```bash
@@ -317,7 +317,7 @@ mkdir catalog
 mv item-catalog catalog
 ```
 
-####Installed modules and packages
+#### Installed modules and packages
 
 Activate venv
 ```bash
@@ -349,7 +349,7 @@ Install the Python PostgreSQL adapter psycopg
 sudo apt-get install python-psycopg2
 ```
 
-##Configure PostgreSQL
+## Configure PostgreSQL
 Reference: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps)
 
 Opened the database setup file
@@ -411,5 +411,5 @@ Granted only access to the catalog role
 GRANT ALL ON SCHEMA public TO catalog;
 ```
 
-##Done
+## Done
 Restarted Apache and opened page in browser
