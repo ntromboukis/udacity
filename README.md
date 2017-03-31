@@ -1,7 +1,7 @@
-##Udacity's Nanodegree Projects
+## Udacity's Nanodegree Projects
 
 
-###Fullstack
+### Fullstack
 Contains the following projects:
 - Make a Movie Website [live](https://www.hiimnick.com/)
 - Multi User Blog [live](https://www.hiimnick.com/)
@@ -11,5 +11,5 @@ Contains the following projects:
 - Conference Planner [live](https://www.hiimnick.com/)
 - Setting up a Linux Server
 
-###Artificial Intelligence
+### Artificial Intelligence
 Coming Soon!
