@@ -1,7 +1,7 @@
-#Description
+# Description
 This is the second project in Udacity;s Full Stack Nanodegree program
 
-#Steps to Run program
+# Steps to Run program
 The way you run this program (on OSX)
 
 1. Make sure you have VirtualBox and Vagrant installed if not install it from [here](https://www.udacity.com/wiki/ud197/install-vagrant). Udacity has a great starting page to get your machine up and running!
