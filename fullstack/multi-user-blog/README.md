@@ -1,11 +1,11 @@
 ## This is the 3rd project for Udacity's FullStack Nanodegree program
 
-###Prerequisists
+### Prerequisites
 1. [Google App Engine Launcher](https://cloud.google.com/appengine/downloads)
 2. [Python](https://www.python.org/downloads/) *if you don't have it already*
 3. [App engin project](https://developers.google.com/ad-exchange/rtb/open-bidder/google-app-guide)
 
-###Steps to run program
+### Steps to run program
 1. Clone or Download repository from link above
 2. Navigate into repository and open ```app.yaml```
     - Change ```Application``` to the name you gave your App Engine Project
